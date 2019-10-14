@@ -61,6 +61,10 @@ cdef class Node:
         return "{},{},{},{}".format(*self.feature[:4])
 
     @property
+    def is_unk(self):
+        return self.stat == 1
+
+    @property
     def white_space(self):
         # The half-width spaces before the token, if any.
         if self.length == self.rlength:
