@@ -4,7 +4,9 @@ from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Build import cythonize
 
-extensions = Extension('fugashi', ['fugashi/fugashi.pyx'], libraries=['mecab'])
+extensions = Extension('fugashi', 
+        ['fugashi/fugashi.pyx'], 
+        libraries=['mecab'])
 setup(name='fugashi', 
       version='0.1.0',
       author="Paul O'Leary McCann",
@@ -15,7 +17,6 @@ setup(name='fugashi',
       classifiers=[
           "License :: OSI Approved :: MIT License",
           "Natural Language :: Japanese",
-          "Text Processing :: Linguistic",
           ],
       python_requires='>=3.6',
       ext_modules=cythonize(extensions),
