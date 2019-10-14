@@ -8,4 +8,13 @@ dealing with only the most common ones.
 - Only UTF-8 is supported.
 - Only Python3 is supported.
 
+## Usage
 
+    from fugashi import Tagger
+
+    tagger = Tagger('-Owakati')
+    tagger.parse("麩菓子（ふがし）は、麩を主材料とした日本の菓子。")
+    # => '麩 菓子 （ ふ が し ） は 、 麩 を 主材 料 と し た 日本 の 菓子 。 \n'
+    for word in tagger.parseToNodeList("麩菓子（ふがし）は、麩を主材料とした日本の菓子。"):
+        print(word, word.features.lemma, word.pos, sep='\t')
+        # "features" is the Unidic feature data as a named tuple
