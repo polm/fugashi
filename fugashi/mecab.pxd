@@ -20,7 +20,6 @@ cdef extern from "mecab.h":
         pass
 
     cdef mecab_t* mecab_new2(char *arg)
-    cdef const char* mecab_sparse_tostr(mecab_t *mecab, const char *str)
     cdef const char* mecab_sparse_tostr2(mecab_t *mecab, const char *str, size_t len)
     cdef const mecab_node_t* mecab_sparse_tonode(mecab_t *mecab, const char *str)
 
