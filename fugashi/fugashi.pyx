@@ -1,4 +1,4 @@
-from mecab cimport mecab_new2, mecab_sparse_tostr2, mecab_t, mecab_node_t, mecab_sparse_tonode
+from mecab cimport mecab_new2, mecab_sparse_tostr2, mecab_t, mecab_node_t, mecab_sparse_tonode, mecab_nbest_sparse_tostr
 from collections import namedtuple
 
 # field names come from here:
@@ -134,4 +134,9 @@ cdef class Tagger:
             if node.stat == 3: # eos node
                 return out
             out.append(Node.wrap(node))
+
+    def nbest(self, text, num=10):
+        cstr = bytes(text, 'utf-8')
+        out = mecab_nbest_sparse_tostr(self.c_tagger, num, cstr).decode('utf-8')
+        return out.rstrip()
 

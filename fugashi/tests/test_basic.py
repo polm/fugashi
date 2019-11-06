@@ -10,7 +10,11 @@ WAKATI_TESTS = (
 TOKENIZER_TESTS = (
         ('あなたは新米の魔女。', ['あなた', 'は', '新米', 'の', '魔女', '。']),
         ('パートナーである猫と共に、見知らぬ町へやってきたばかりです。', ['パートナー', 'で', 'ある', '猫', 'と', '共', 'に', '、', '見知ら', 'ぬ', '町', 'へ', 'やっ', 'て', 'き', 'た', 'ばかり', 'です', '。']),
+        )
 
+NBEST_TESTS = (
+        ('外国人参政権', '外国 人参 政権 \n外国 人 参政 権'),
+        ("深海魚は、深海に生息する魚類の総称。", '深海 魚 は 、 深海 に 生息 する 魚類 の 総称 。 \n深 海魚 は 、 深海 に 生息 する 魚類 の 総称 。'),
         )
 
 @pytest.mark.parametrize('text,wakati', WAKATI_TESTS)
@@ -25,3 +29,8 @@ def test_tokens(text, saved):
     tagger = Tagger()
     tokens = [str(tok) for tok in tagger.parseToNodeList(text)]
     assert tokens == saved
+
+@pytest.mark.parametrize('text,saved', NBEST_TESTS)
+def test_nbest(text, saved):
+    tagger = Tagger('-Owakati')
+    assert tagger.nbest(text, 2) == saved
