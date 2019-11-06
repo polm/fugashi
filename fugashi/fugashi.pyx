@@ -1,4 +1,5 @@
-from mecab cimport mecab_new2, mecab_sparse_tostr2, mecab_t, mecab_node_t, mecab_sparse_tonode, mecab_nbest_sparse_tostr
+from mecab cimport (mecab_new2, mecab_sparse_tostr2, mecab_t, mecab_node_t,
+        mecab_sparse_tonode, mecab_nbest_sparse_tostr)
 from collections import namedtuple
 
 # field names come from here:
