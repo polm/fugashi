@@ -121,9 +121,17 @@ cdef class Tagger:
         cstr = bytes(text, 'utf-8')
         cdef const mecab_node_t* node = mecab_sparse_tonode(self.c_tagger, cstr)
 
-        out = [Node.wrap(node)]
+        # A nodelist always contains one each of BOS and EOS (beginning/end of
+        # sentence) nodes. Since they have no information on them and MeCab
+        # doesn't do any kind of sentence tokenization they're not useful in
+        # the output and will be removed here.
+
+        # Node that on the command line this behavior is different, and each
+        # line is treated as a sentence.
+        out = []
         while node.next:
             node = node.next
+            if node.stat == 3: # eos node
+                return out
             out.append(Node.wrap(node))
-        return out
 
