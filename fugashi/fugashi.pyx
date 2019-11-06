@@ -10,14 +10,7 @@ UnidicFeatures = namedtuple('UnidicFeatures',
 cdef class Node:
     cdef const mecab_node_t* c_node
     cdef str surface
-    cdef bytes feature_bytes
     cdef object features
-    cdef unsigned int id
-    cdef unsigned short length
-    cdef unsigned short rlength
-    cdef unsigned short posid
-    cdef unsigned char char_type
-    cdef unsigned char stat
 
     def __init__(self):
         pass
@@ -41,20 +34,28 @@ cdef class Node:
     @property
     def feature(self):
         if self.features is None:
-            self.set_feature(self.feature_bytes)
+            self.set_feature(self.c_node.feature)
         return self.features
     
     @property
+    def length(self):
+        return self.c_node.length
+
+    @property
+    def rlength(self):
+        return self.c_node.rlength
+
+    @property
     def posid(self):
-        return self.posid
+        return self.c_node.posid
 
     @property
     def char_type(self):
-        return self.char_type
+        return self.c_node.char_type
 
     @property
     def stat(self):
-        return self.stat
+        return self.c_node.stat
 
     @property
     def pos(self):
@@ -89,17 +90,6 @@ cdef class Node:
         # Also note it's not zero terminated.
         node.surface = c_node.surface[:c_node.length].decode('utf-8')
 
-        # This is null terminated.
-        # The features are lazily initialized so that it's faster 
-        # if you just want a list of words.
-        node.feature_bytes = c_node.feature
-
-        node.id = c_node.id
-        node.length = c_node.length
-        node.rlength = c_node.rlength
-        node.posid = c_node.posid
-        node.char_type = c_node.char_type
-        node.stat = c_node.stat
         return node
 
 cdef class Tagger:
