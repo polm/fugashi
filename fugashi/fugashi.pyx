@@ -10,7 +10,7 @@ UnidicFeatures = namedtuple('UnidicFeatures',
 cdef class Node:
     cdef const mecab_node_t* c_node
     cdef str surface
-    cdef str feature_str
+    cdef bytes feature_bytes
     cdef object features
     cdef unsigned int id
     cdef unsigned short length
@@ -41,7 +41,7 @@ cdef class Node:
     @property
     def feature(self):
         if self.features is None:
-            self.set_feature(self.feature_str)
+            self.set_feature(self.feature_bytes)
         return self.features
     
     @property
@@ -72,8 +72,8 @@ cdef class Node:
         else:
             return ' ' * (self.rlength - self.length)
 
-    cdef void set_feature(self, str feature):
-        fields = feature.split(',')
+    cdef void set_feature(self, bytes feature):
+        fields = feature.decode('utf-8').split(',')
         if self.stat == 1: 
             # unks have fewer fields
             #XXX should this be '*' or ''?
@@ -89,17 +89,17 @@ cdef class Node:
         # Also note it's not zero terminated.
         node.surface = c_node.surface[:c_node.length].decode('utf-8')
 
+        # This is null terminated.
+        # The features are lazily initialized so that it's faster 
+        # if you just want a list of words.
+        node.feature_bytes = c_node.feature
+
         node.id = c_node.id
         node.length = c_node.length
         node.rlength = c_node.rlength
         node.posid = c_node.posid
         node.char_type = c_node.char_type
         node.stat = c_node.stat
-
-        # This is null terminated.
-        # The features are lazily initialized so that it's faster 
-        # if you just want a list of words.
-        node.feature_str = c_node.feature.decode('utf-8')
         return node
 
 cdef class Tagger:
