@@ -111,7 +111,11 @@ cdef class Tagger:
 
     def parse(self, str text):
         btext = bytes(text, 'utf-8')
-        return mecab_sparse_tostr2(self.c_tagger, btext, len(btext)).decode('utf-8')
+        out = mecab_sparse_tostr2(self.c_tagger, btext, len(btext)).decode('utf-8')
+        # MeCab always adds a newline, and in wakati mode it adds a space.
+        # The reason for this is unclear but may be for terminal use.
+        # It's never helpful, so remove it.
+        return out.rstrip()
 
     def parseToNodeList(self, text):
         cstr = bytes(text, 'utf-8')
