@@ -11,7 +11,7 @@ extensions = Extension('fugashi',
 with open('README.md') as ff:
     README = ff.read()
 setup(name='fugashi', 
-      version='0.1.2',
+      version='0.1.3',
       author="Paul O'Leary McCann",
       author_email="polm@dampfkraft.com",
       description="A Cython wrapper for MeCab",
