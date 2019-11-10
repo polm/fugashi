@@ -34,3 +34,9 @@ def test_tokens(text, saved):
 def test_nbest(text, saved):
     tagger = Tagger('-Owakati')
     assert tagger.nbest(text, 2) == saved
+
+def test_invalid_args():
+    # Invalid args will give a NULL pointer for the Tagger object
+    # don't try to use the null object!
+    with pytest.raises(RuntimeError):
+        tagger = Tagger('-fail')

@@ -99,6 +99,11 @@ cdef class Tagger:
     def __init__(self, arg=''):
         arg = bytes(arg, 'utf-8')
         self.c_tagger = mecab_new2(arg)
+        if self.c_tagger == NULL:
+            # In theory mecab_strerror should return an error string from MeCab
+            # It doesn't seem to work and just returns b'' though, so this will
+            # have to do.
+            raise RuntimeError("Couldn't create Tagger. Maybe your arguments are invalid?")
 
     def parse(self, str text):
         btext = bytes(text, 'utf-8')
