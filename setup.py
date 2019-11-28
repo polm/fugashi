@@ -9,7 +9,7 @@ extensions = Extension('fugashi',
         libraries=['mecab'])
 
 setup(name='fugashi', 
-      version='0.1.4',
+      version='0.1.5',
       author="Paul O'Leary McCann",
       author_email="polm@dampfkraft.com",
       description="A Cython wrapper for MeCab",
