@@ -14,25 +14,26 @@ def mecab_config(arg):
 	return output.split()
 
 is_windows = os.name == 'nt'
-is_64bits = sys.maxsize > 2**32
 
 win_mecab_dir = r'C:\mecab'
 win_sdk_dir = win_mecab_dir
 win_bin_dir = win_mecab_dir
 # If you want to use official Windows binary, you can comment out following variables
+#is_64bits = sys.maxsize > 2**32
 #win_mecab_dir = r'C:\Program Files{}\MeCab'.format('' if is_64bits else ' (x86)')
 #win_sdk_dir = r'{}\sdk'.format(win_mecab_dir)
 #win_bin_dir = r'{}\bin'.format(win_mecab_dir)
 
-include_dirs = mecab_config("--inc-dir")
-library_dirs = mecab_config("--libs-only-L")
-libraries = mecab_config("--libs-only-l")
-data_files = []
 if is_windows:
     include_dirs = [win_sdk_dir]
     library_dirs = [win_sdk_dir]
     libraries = ["libmecab"]
     data_files = [("lib\\site-packages\\", ["{}\\libmecab.dll".format(win_bin_dir)])]
+else:
+    include_dirs = mecab_config("--inc-dir")
+    library_dirs = mecab_config("--libs-only-L")
+    libraries = mecab_config("--libs-only-l")
+    data_files = []
 
 extensions = Extension('fugashi', 
         ['fugashi/fugashi.pyx'], 
