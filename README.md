@@ -1,6 +1,6 @@
 # fugashi
 
-![Fugashi by Irasutoya](fugashi.png)
+<img src="https://github.com/polm/fugashi/raw/master/fugashi.png" width=125 height=125 alt="Fugashi by Irasutoya" />
 
 Fugashi is a Cython wrapper for [MeCab](https://taku910.github.io/mecab/). It
 doesn't attempt to cover all of the potential use cases of MeCab, instead
