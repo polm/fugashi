@@ -37,6 +37,10 @@ cdef class Node:
         if self.features is None:
             self.set_feature(self.c_node.feature)
         return self.features
+
+    @property
+    def feature_raw(self):
+        return self.c_node.feature
     
     @property
     def length(self):
