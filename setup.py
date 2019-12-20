@@ -42,7 +42,7 @@ extensions = Extension('fugashi',
         include_dirs=include_dirs)
 
 setup(name='fugashi', 
-      version='0.1.5',
+      version='0.1.6',
       author="Paul O'Leary McCann",
       author_email="polm@dampfkraft.com",
       description="A Cython wrapper for MeCab",
