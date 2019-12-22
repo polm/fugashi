@@ -2,13 +2,7 @@
 
 <img src="https://github.com/polm/fugashi/raw/master/fugashi.png" width=125 height=125 alt="Fugashi by Irasutoya" />
 
-Fugashi is a Cython wrapper for [MeCab](https://taku910.github.io/mecab/). It
-doesn't attempt to cover all of the potential use cases of MeCab, instead
-dealing with only the most common ones.
-
-- Only UniDic is supported, you can't use IPADic. UniDic Neologd is fine.
-- Only UTF-8 is supported.
-- Only Python3 is supported.
+Fugashi is a Cython wrapper for [MeCab](https://taku910.github.io/mecab/).
 
 See the [blog post](https://www.dampfkraft.com/nlp/fugashi.html) for background
 on why Fugashi exists and some of the design decisions.
@@ -24,6 +18,30 @@ on why Fugashi exists and some of the design decisions.
     for word in tagger.parseToNodeList(text):
         print(word, word.feature.lemma, word.pos, sep='\t')
         # "feature" is the Unidic feature data as a named tuple
+
+## Dictionary Use
+
+Fugashi is written with the assumption you'll use Unidic to process Japanese,
+but it supports arbitrary dictionaries. 
+
+If you're using a dictionary besides Unidic you can use the GenericTagger like this:
+
+    from fugashi import GenericTagger
+    tagger = GenericTagger()
+
+    # parse can be used as normal
+    tagger.parse('something')
+    # features from the dictionary can be accessed by field numbers
+    for word in tagger.parseToNodeList(text):
+        print(word.surface, word.feature[0])
+
+You can also create a dictionary wrapper to get feature information as a named tuple. 
+
+    from fugashi import GenericTagger, create_feature_wrapper
+    CustomFeatures = create_feature_wrapper('CustomFeatures', 'alpha beta gamma')
+    tagger = GenericTagger(wrapper=CustomFeatures)
+    for word in tagger.parseToNodeList(text):
+        print(word.surface, word.feature.alpha)
 
 ## Alternatives
 
