@@ -2,16 +2,36 @@ from mecab cimport (mecab_new2, mecab_sparse_tostr2, mecab_t, mecab_node_t,
         mecab_sparse_tonode, mecab_nbest_sparse_tostr)
 from collections import namedtuple
 
-# field names come from here:
+# field names can be found in the dicrc file distributed with Unidic or here:
 # https://unidic.ninjal.ac.jp/faq
-UnidicFeatures = namedtuple('UnidicFeatures', 
+
+# 2.1.2 schema
+UnidicFeatures17 = namedtuple('UnidicFeatures16', 
         ('pos1 pos2 pos3 pos4 cType cForm lForm lemma orth pron ' 
-        'orthBase pronBase goshu iType iForm fType fForm').split(' '))
+        'orthBase pronBase goshu iType iForm fType fForm').split(' '),
+        defaults=((None,) * 17))
+
+# schema used in 2.2.0, 2.3.0
+UnidicFeatures29 = namedtuple('UnidicFeatures29', 'pos1 pos2 pos3 pos4 cType '
+        'cForm lForm lemma orth pron orthBase pronBase goshu iType iForm fType '
+        'fForm iConType fConType type kana kanaBase form formBase aType aConType '
+        'aModType lid lemma_id'.split(' '), defaults=((None,) * 29))
+
+# mecab-ko-dic v2.0
+# https://docs.google.com/spreadsheets/d/1-9blXKjtjeKZqsf4NzHeYJCrr49-nXeRF6D80udfcwY/edit#gid=1718487366
+# note that unks seems to have the same number of fields as actual entries
+KoreanFeatures = namedtuple('KoreanFeatures', 'pos semantic_class jongseong ' 
+        'reading type start_pos end_pos expression', defaults=((None,) * 8))
 
 cdef class Node:
+    """Generic Nodes are modeled after the data returned from MeCab.
+
+    Some data is in a strict format using enums, but most useful data is in the
+    feature string, which is an untokenized CSV string."""
     cdef const mecab_node_t* c_node
     cdef str surface
     cdef object features
+    cdef object wrapper
 
     def __init__(self):
         pass
@@ -63,10 +83,6 @@ cdef class Node:
         return self.c_node.stat
 
     @property
-    def pos(self):
-        return "{},{},{},{}".format(*self.feature[:4])
-
-    @property
     def is_unk(self):
         return self.stat == 1
 
@@ -80,16 +96,13 @@ cdef class Node:
 
     cdef void set_feature(self, bytes feature):
         fields = feature.decode('utf-8').split(',')
-        if self.stat == 1: 
-            # unks have fewer fields
-            #XXX should this be '*' or ''?
-            fields = fields + ([None] * 11)
-        self.features = UnidicFeatures(*fields)
+        self.features = self.wrapper(*fields)
 
     @staticmethod
-    cdef Node wrap(const mecab_node_t* c_node):
+    cdef Node wrap(const mecab_node_t* c_node, object wrapper):
         cdef Node node = Node.__new__(Node)
         node.c_node = c_node
+        node.wrapper = wrapper
 
         # The surface gets freed so we need to copy it here
         # Also note it's not zero terminated.
@@ -97,10 +110,55 @@ cdef class Node:
 
         return node
 
-cdef class Tagger:
-    cdef mecab_t* c_tagger
+cdef class UnidicNode(Node):
+    """A Unidic specific node type.
 
-    def __init__(self, arg=''):
+    At present this just adds a convenience function to get the four-field POS
+    value.
+    """
+
+    @property
+    def pos(self):
+        return "{},{},{},{}".format(*self.feature[:4])
+
+cdef class KoreanNode(Node):
+    """Node for mecab-ko-dic. Handles nested entries.
+    """
+    
+    cdef str _lemma
+    cdef str _tag
+    cdef str _eomi
+
+    @property
+    def lemma(self):
+        if self._lemma is None:
+            self._lemma = self.feature.expression.split('/')[0]
+        return self._lemma
+
+    @property
+    def tag(self):
+        if self._tag is None:
+            self._tag, _, self._eomi = self.feature.pos.partition('+')
+        return self._tag
+    
+    @property
+    def eomi(self):
+        if self._eomi is None:
+            self._tag, _, self._eomi = self.feature.pos.partition('+')
+        return self._eomi
+
+cdef class GenericTagger:
+    """Generic Tagger, supports any dictionary.
+
+    By default dictionary features are wrapped in a tuple. If you want you can
+    provide a namedtuple or similar container for them as an argument to the
+    constructor.
+    """
+
+    cdef mecab_t* c_tagger
+    cdef object wrapper
+
+    def __init__(self, arg='', wrapper=tuple):
         arg = bytes(arg, 'utf-8')
         self.c_tagger = mecab_new2(arg)
         if self.c_tagger == NULL:
@@ -108,6 +166,7 @@ cdef class Tagger:
             # It doesn't seem to work and just returns b'' though, so this will
             # have to do.
             raise RuntimeError("Couldn't create Tagger. Maybe your arguments are invalid?")
+        self.wrapper = wrapper
 
     def parse(self, str text):
         btext = bytes(text, 'utf-8')
@@ -116,6 +175,10 @@ cdef class Tagger:
         # The reason for this is unclear but may be for terminal use.
         # It's never helpful, so remove it.
         return out.rstrip()
+
+    cdef wrap(self, const mecab_node_t* node):
+        # This function just exists so subclasses can override the node type.
+        return Node.wrap(node, self.wrapper)
 
     def parseToNodeList(self, text):
         cstr = bytes(text, 'utf-8')
@@ -133,10 +196,53 @@ cdef class Tagger:
             node = node.next
             if node.stat == 3: # eos node
                 return out
-            out.append(Node.wrap(node))
+            out.append(self.wrap(node))
 
     def nbest(self, text, num=10):
         cstr = bytes(text, 'utf-8')
         out = mecab_nbest_sparse_tostr(self.c_tagger, num, cstr).decode('utf-8')
         return out.rstrip()
 
+cdef class Tagger(GenericTagger):
+    """Default tagger. Detects the correct Unidic feature format.
+
+    Unidic 2.1.2 (17 field) and 2.2, 2.3 format (29 field) are supported.
+    """
+
+    def __init__(self, arg=''):
+        super().__init__(arg)
+
+        fields = self.parseToNodeList("日本")[0].feature_raw.split(',')
+
+        if len(fields) == 17:
+            self.wrapper = UnidicFeatures17
+        elif len(fields) == 29:
+            self.wrapper = UnidicFeatures29
+        else:
+            raise RuntimeError("Unknown Dictionary Format, use a GenericTagger")
+
+    # This needs to be overridden to change the node type.
+    cdef wrap(self, const mecab_node_t* node):
+        return UnidicNode.wrap(node, self.wrapper)
+
+cdef class KoreanTagger(GenericTagger):
+    """Tagger for mecab-ko.
+    """
+    
+    def __init__(self, arg=''):
+        super().__init__(arg)
+        self.wrapper = KoreanFeatures
+    
+    cdef wrap(self, const mecab_node_t* node):
+        return KoreanNode.wrap(node, self.wrapper)
+
+def create_feature_wrapper(name, fields, default=None):
+    """Create a namedtuple based wrapper for dictionary features.
+
+    This sets the default values for the namedtuple to None since in most cases
+    unks will have fewer fields.
+
+    The resulting type can be used as the wrapper argument to GenericTagger to
+    support new dictionaries.
+    """
+    return namedtuple(name, fields, defaults=(None,) * len(fields))
