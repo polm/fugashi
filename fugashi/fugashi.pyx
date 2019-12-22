@@ -40,7 +40,7 @@ cdef class Node:
 
     @property
     def feature_raw(self):
-        return self.c_node.feature
+        return self.c_node.feature.decode('utf-8')
     
     @property
     def length(self):
