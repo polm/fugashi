@@ -3,11 +3,22 @@ import platform
 import subprocess
 import glob
 
+def mecab_config(com="mecab-config"):
+    output = subprocess.check_output([com, "--inc-dir", "--libs-only-L", "--libs-only-l"])
+    if not isinstance(output, str):
+        output = output.decode("utf-8")
+    return output
+
 def check_libmecab():
     try:
-        output = subprocess.check_output(["mecab-config", "--inc-dir", "--libs-only-L", "--libs-only-l"])
-        if not isinstance(output, str):
-            output = output.decode("utf-8")
+        output = mecab_config()
+        return output
+    except:
+        pass
+
+    try:
+        subprocess.run(["apt-get", "install", "-y", "libmecab-dev"])
+        output = mecab_config()
         return output
     except:
         pass
@@ -15,13 +26,16 @@ def check_libmecab():
     os.makedirs("build/mecab", exist_ok=True)
     os.chdir("build/mecab")
 
+    if platform.system().startswith("CYGWIN"):
+        rep = "mecab-cygwin64" if platform.machine()=="x86_64" else "mecab-cygwin32"
+        subprocess.run(["git", "clone", "--depth=1", "https://github.com/KoichiYasuoka/"+rep])
+        output = mecab_config(rep+"/bin/mecab-config")
+        return output.replace("/usr/local/", "build/mecab/"+rep+"/")
     try:
         subprocess.run(["apt-get", "download", "libmecab-dev", "libmecab2"])
         for deb in glob.glob("libmecab*.deb"):
             subprocess.run(["dpkg", "-x", deb, "."])
-        output = subprocess.check_output(["./usr/bin/mecab-config", "--inc-dir", "--libs-only-L", "--libs-only-l"])
-        if not isinstance(output, str):
-            output = output.decode("utf-8")
+        output = mecab_config("usr/bin/mecab-config")
         return output.replace("/usr/","build/mecab/usr/")
     except:
         pass
