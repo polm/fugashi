@@ -5,14 +5,6 @@ import os
 from distutils.core import setup
 from distutils.extension import Extension
 
-def mecab_config(arg):
-	output = subprocess.check_output(["mecab-config", arg])
-
-	if not isinstance(output, str):
-		output = output.decode("utf-8")
-
-	return output.split()
-
 is_windows = os.name == 'nt'
 
 win_mecab_dir = r'C:\mecab'
@@ -30,9 +22,17 @@ if is_windows:
     libraries = ["libmecab"]
     data_files = [("lib\\site-packages\\", ["{}\\libmecab.dll".format(win_bin_dir)])]
 else:
-    include_dirs = mecab_config("--inc-dir")
-    library_dirs = mecab_config("--libs-only-L")
-    libraries = mecab_config("--libs-only-l")
+    try:
+        output = subprocess.check_output(["mecab-config", "--inc-dir", "--libs-only-L", "--libs-only-l"])
+    except:
+	from .util import download_libmecab
+	output = download_libmecab()
+    if not isinstance(output, str):
+	output = output.decode("utf-8")
+    output = output.split("\n")
+    include_dirs = output[0].split()
+    library_dirs = output[1].split()
+    libraries = output[2].split()
     data_files = []
 
 extensions = Extension('fugashi', 
