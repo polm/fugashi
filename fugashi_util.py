@@ -44,7 +44,7 @@ def mecab_config_debian2():
     os.chdir(base_dir)
     lib_dir = site.USER_BASE + "/lib/mecab"
     mecab_details = (mc[0].replace("/usr/","build/mecab/usr/"), mc[1].replace("/usr/","build/mecab/usr/"), mc[2], '-Wl,-rpath={}'.format(lib_dir))
-    data_files = [(lib_dir, glob.glob(mc[1] + "/libmecab.*"))]
+    data_files = [(lib_dir, glob.glob(mc[1].replace("/usr/","build/mecab/usr/") + "/libmecab.*"))]
     return mecab_details, data_files
 
 def mecab_config_linux_build():
