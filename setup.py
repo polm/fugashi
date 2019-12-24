@@ -9,18 +9,20 @@ from fugashi_util import check_libmecab
 curdir = os.getcwd()
 output,data_files = check_libmecab()
 os.chdir(curdir)
-mecab_config = output.split("\n")
+mecab_config = (output+"\n\n\n\n").split("\n")
 include_dirs = mecab_config[0].split()
 library_dirs = mecab_config[1].split()
 libraries = mecab_config[2].split()
 extra_objects = mecab_config[3].split()
+extra_link_args = mecab_config[4].split()
 
 extensions = Extension('fugashi', 
         ['fugashi/fugashi.pyx'], 
         libraries=libraries,
         library_dirs=library_dirs,
         include_dirs=include_dirs,
-        extra_objects=extra_objects)
+        extra_objects=extra_objects,
+        extra_link_args=extra_link_args)
 
 setup(name='fugashi', 
       version='0.1.6',

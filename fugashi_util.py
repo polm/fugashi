@@ -1,5 +1,6 @@
 import os
 import platform
+import site
 import subprocess
 import glob
 
@@ -20,6 +21,7 @@ def check_libmecab():
     except:
         pass
 
+    base_dir = os.getcwd()
     os.makedirs("build/mecab", exist_ok=True)
     os.chdir("build/mecab")
 
@@ -38,6 +40,19 @@ def check_libmecab():
     except:
         pass
 
+    try:
+        subprocess.run(["apt-get", "download", "libmecab-dev", "libmecab2"])
+        for deb in glob.glob("libmecab*.deb"):
+            subprocess.run(["dpkg", "-x", deb, "."])
+        output = mecab_config("usr/bin/mecab-config").replace("/usr/","build/mecab/usr/")
+        os.chdir(base_dir)
+        mc = output.split("\n")
+        lib_dir = site.USER_BASE+"/lib/mecab"
+        return output+"\n-Wl,-rpath="+lib_dir, [(lib_dir, glob.glob(mc[1]+"/libmecab.*"))]
+    except:
+        pass
+
+    os.chdir(base_dir+"/build/mecab")
     subprocess.run(["git", "clone", "--depth=1", "https://github.com/taku910/mecab"])
     os.chdir("mecab/mecab")
     if not os.path.isfile("mecab-config"):
@@ -50,5 +65,5 @@ def check_libmecab():
     if not os.path.isfile("libmecab.so"):
         os.symlink(".libs/libmecab.so", "libmecab.so")
     src_dir="build/mecab/mecab/mecab/src"
-    obj=" ".join(glob.glob(".libs/*.o")).replace(".libs/",src_dir+"/.libs/")
+    obj=" ".join(glob.glob(".libs/*.o")).replace(".libs/", src_dir+"/.libs/")
     return src_dir+"\n\nstdc++\n"+obj, []
