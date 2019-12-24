@@ -13,12 +13,14 @@ mecab_config = output.split("\n")
 include_dirs = mecab_config[0].split()
 library_dirs = mecab_config[1].split()
 libraries = mecab_config[2].split()
+extra_objects = mecab_config[3].split()
 
 extensions = Extension('fugashi', 
         ['fugashi/fugashi.pyx'], 
         libraries=libraries,
         library_dirs=library_dirs,
-        include_dirs=include_dirs)
+        include_dirs=include_dirs,
+        extra_objects=extra_objects)
 
 setup(name='fugashi', 
       version='0.1.6',
