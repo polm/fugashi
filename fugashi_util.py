@@ -19,51 +19,40 @@ def mecab_config_windows():
         return mecab_details, data_files
 
 def mecab_config_cygwin():
-    base_dir = os.getcwd()
-    os.makedirs("build/mecab", exist_ok=True)
-    os.chdir("build/mecab")
     ## Cygwin
+    os.chdir("build/mecab")
     if platform.system().startswith("CYGWIN"):
         rep = "mecab-cygwin64" if platform.machine() == "x86_64" else "mecab-cygwin32"
         subprocess.run(["git", "clone", "--depth=1", "https://github.com/KoichiYasuoka/"+rep])
-        os.chdir(rep)
-        subprocess.run(["sh", "-x", "./install.sh", "/usr/local"])
-        output = mecab_config("/usr/local/bin/mecab-config")
-        return output, []
+        mecab_details = ("build/mecab/"+rep+"/include", "build/mecab/"+rep+"/lib", "mecab stdc++")
+        return mecab_details, []
 
 def mecab_config_debian():
-    ## Debian
-    # XXX how is this different from the debian2 part?
-    try:
-        subprocess.run(["apt-get", "install", "-y", "libmecab-dev"])
-        output = mecab_config("mecab-config")
-        return output, []
-    except:
-        pass
+    ## Debian (as root)
+    subprocess.run(["apt-get", "install", "-y", "libmecab-dev"])
+    output = mecab_config("mecab-config")
+    return output
 
 def mecab_config_debian2():
-    ##XXX What platform is this? Also Debian?
-    os.chdir(base_dir+"/build/mecab")
-    subprocess.run(["git", "clone", "--depth=1", "https://github.com/taku910/mecab"])
-    os.chdir("mecab/mecab")
-    try:
-        subprocess.run(["apt-get", "download", "libmecab-dev", "libmecab2"])
-        for deb in glob.glob("libmecab*.deb"):
-            subprocess.run(["dpkg", "-x", deb, "."])
-        output = mecab_config("usr/bin/mecab-config").replace("/usr/","build/mecab/usr/")
-        os.chdir(base_dir)
-        mc = output.split("\n")
-        lib_dir = site.USER_BASE + "/lib/mecab"
-        mecab_details = (*mc, '-Wl,-rpath={}'.format(lib_dir))
-        data_files = [(lib_dir, glob.glob(mc[1] + "/libmecab.*"))]
-        return mecab_details, data_files
-    except:
-        pass
+    ## Debian (as user)
+    base_dir = os.getcwd()
+    os.chdir("build/mecab")
+    subprocess.run(["apt-get", "download", "libmecab-dev", "libmecab2"])
+    for deb in glob.glob("libmecab*.deb"):
+        subprocess.run(["dpkg", "-x", deb, "."])
+    mc,dummy = mecab_config("usr/bin/mecab-config")
+    print(mc)
+    os.chdir(base_dir)
+    lib_dir = site.USER_BASE + "/lib/mecab"
+    mecab_details = (mc[0].replace("/usr/","build/mecab/usr/"), mc[1].replace("/usr/","build/mecab/usr/"), mc[2], '-Wl,-rpath={}'.format(lib_dir))
+    print(mecab_details)
+    data_files = [(lib_dir, glob.glob(mc[1] + "/libmecab.*"))]
+    return mecab_details, data_files
 
 def mecab_config_linux_build():
     # this builds mecab from source on a linux-like (OSX?)
     # XXX what platform is this for?
-    os.chdir(base_dir+"/build/mecab")
+    os.chdir("build/mecab")
     subprocess.run(["git", "clone", "--depth=1", "https://github.com/taku910/mecab"])
     os.chdir("mecab/mecab")
     if not os.path.isfile("mecab-config"):
@@ -98,13 +87,13 @@ def check_libmecab():
     # A few scripts will use a build directory. Save where we start so we can
     # reset the directory after each build step.
     cwd = os.getcwd()
+    os.makedirs("build/mecab", exist_ok=True)
     for config in configs:
         try:
             out = config()
+            os.chdir(cwd)
             if out:
                 return out
         except:
             # failure is normal, typically just a different platform
-            pass
-        finally:
             os.chdir(cwd)
