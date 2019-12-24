@@ -41,11 +41,9 @@ def mecab_config_debian2():
     for deb in glob.glob("libmecab*.deb"):
         subprocess.run(["dpkg", "-x", deb, "."])
     mc,dummy = mecab_config("usr/bin/mecab-config")
-    print(mc)
     os.chdir(base_dir)
     lib_dir = site.USER_BASE + "/lib/mecab"
     mecab_details = (mc[0].replace("/usr/","build/mecab/usr/"), mc[1].replace("/usr/","build/mecab/usr/"), mc[2], '-Wl,-rpath={}'.format(lib_dir))
-    print(mecab_details)
     data_files = [(lib_dir, glob.glob(mc[1] + "/libmecab.*"))]
     return mecab_details, data_files
 
