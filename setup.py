@@ -1,15 +1,16 @@
 import pathlib
 import setuptools
 import subprocess
-import os
 from distutils.core import setup
 from distutils.extension import Extension
 
 from fugashi_util import check_libmecab
-curdir = os.getcwd()
-output,data_files = check_libmecab()
-os.chdir(curdir)
-mecab_config = (output+"\n\n\n\n").split("\n")
+
+# get the build parameters
+output, data_files = check_libmecab()
+
+# pad the list in case something's missing
+mecab_config = list(output) + ([''] * 5)
 include_dirs = mecab_config[0].split()
 library_dirs = mecab_config[1].split()
 libraries = mecab_config[2].split()
