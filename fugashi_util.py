@@ -43,13 +43,14 @@ def mecab_config_debian2():
     mc,dummy = mecab_config("usr/bin/mecab-config")
     os.chdir(base_dir)
     lib_dir = site.USER_BASE + "/lib/mecab"
-    mecab_details = (mc[0].replace("/usr/","build/mecab/usr/"), mc[1].replace("/usr/","build/mecab/usr/"), mc[2], '-Wl,-rpath={}'.format(lib_dir))
-    data_files = [(lib_dir, glob.glob(mc[1].replace("/usr/","build/mecab/usr/") + "/libmecab.*"))]
+    mecab_details = ("build/mecab" + mc[0], "build/mecab" + mc[1], mc[2], '-Wl,-rpath={}'.format(lib_dir))
+    data_files = [(lib_dir, glob.glob("build/mecab" + mc[1] + "/libmecab.*"))]
     return mecab_details, data_files
 
 def mecab_config_linux_build():
     # this builds mecab from source on a linux-like (OSX?)
     # XXX what platform is this for?
+    base_dir = os.getcwd()
     os.chdir("build/mecab")
     subprocess.run(["git", "clone", "--depth=1", "https://github.com/taku910/mecab"])
     os.chdir("mecab/mecab")
@@ -60,12 +61,17 @@ def mecab_config_linux_build():
         subprocess.run(["./configure", "--disable-static", "--enable-shared", "--with-charset=utf8"])
     os.chdir("src")
     subprocess.run(["make", "libmecab.la"])
-    if not os.path.isfile("libmecab.so"):
-        os.symlink(".libs/libmecab.so", "libmecab.so")
     src_dir = "build/mecab/mecab/mecab/src"
-    obj= " ".join(glob.glob(".libs/*.o")).replace(".libs/", src_dir+"/.libs/")
-    mecab_details = (src_dir, '', 'stdc++', obj)
-    return mecab_details, []
+    lib_dir = site.USER_BASE + "/lib/mecab"
+    if os.path.isfile("libmecab.so"):
+        os.chdir(base_dir)
+        data_files = [(lib_dir, glob.glob(src_dir + "/libmecab.*"))]
+    else:
+        os.symlink(".libs/libmecab.so", "libmecab.so")
+        os.chdir(base_dir)
+        data_files = [(lib_dir, glob.glob(src_dir + "/.libs/libmecab.*"))]
+    mecab_details = (src_dir, src_dir, 'mecab stdc++', '-Wl,-rpath={}'.format(lib_dir))
+    return mecab_details, data_files
 
 def check_libmecab():
     """Get MeCab build parameters.
