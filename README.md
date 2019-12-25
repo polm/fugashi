@@ -7,6 +7,9 @@ Fugashi is a Cython wrapper for [MeCab](https://taku910.github.io/mecab/).
 See the [blog post](https://www.dampfkraft.com/nlp/fugashi.html) for background
 on why Fugashi exists and some of the design decisions.
 
+Any reasonable version of MeCab should work, but it's recommended you install
+[from source](https://github.com/taku910/mecab).
+
 ## Usage
 
     from fugashi import Tagger
