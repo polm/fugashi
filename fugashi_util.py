@@ -82,8 +82,8 @@ def check_libmecab():
             mecab_config_windows,
             mecab_config,
             mecab_config_cygwin,
-            mecab_config_debian,
-            mecab_config_debian2,
+            mecab_config_debian_root,
+            mecab_config_debian_user,
             mecab_config_linux_build,
             ]
 
