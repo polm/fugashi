@@ -27,13 +27,13 @@ def mecab_config_cygwin():
         mecab_details = ("build/mecab/"+rep+"/include", "build/mecab/"+rep+"/lib", "mecab stdc++")
         return mecab_details, []
 
-def mecab_config_debian():
+def mecab_config_debian_root():
     ## Debian (as root)
     subprocess.run(["apt-get", "install", "-y", "libmecab-dev"])
     output = mecab_config("mecab-config")
     return output
 
-def mecab_config_debian2():
+def mecab_config_debian_user():
     ## Debian (as user)
     base_dir = os.getcwd()
     os.chdir("build/mecab")
@@ -48,8 +48,7 @@ def mecab_config_debian2():
     return mecab_details, data_files
 
 def mecab_config_linux_build():
-    # this builds mecab from source on a linux-like (OSX?)
-    # XXX what platform is this for?
+    """Build from source on Linux-like as a last resort."""
     base_dir = os.getcwd()
     os.chdir("build/mecab")
     subprocess.run(["git", "clone", "--depth=1", "https://github.com/taku910/mecab"])
