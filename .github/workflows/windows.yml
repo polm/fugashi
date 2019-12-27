@@ -59,11 +59,13 @@ jobs:
         name: win-wheels
         path: dist
     - name: Set release version
-      run: echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:11})
+      run: |
+        echo $GITHUB_REF
+        echo ::set-env name=RELEASE_VERSION::$(echo ${GITHUB_REF:11})
     - name: Check wheels
       shell: bash
       working-directory: dist
       run: |
         ls -la
-        pip install "fugashi-${{ env.RELEASE_VERSION }}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-win_amd64.whl"
+        pip install "fugashi-0.1.8-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-win_amd64.whl"
 
