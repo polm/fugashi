@@ -42,6 +42,7 @@ extensions = Extension('fugashi',
         include_dirs=include_dirs)
 
 setup(name='fugashi', 
+      version='0.1.8',
       use_scm_version=True,
       author="Paul O'Leary McCann",
       author_email="polm@dampfkraft.com",
