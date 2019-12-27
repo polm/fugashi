@@ -147,6 +147,14 @@ cdef class KoreanNode(Node):
             self._tag, _, self._eomi = self.feature.pos.partition('+')
         return self._eomi
 
+def make_tuple(*args):
+    """Take variable number of args, return tuple.
+
+    The tuple constructor actually has a different type signature than the
+    namedtuple constructor. This is a wrapper to give it the same interface.
+    """
+    return tuple(args)
+
 cdef class GenericTagger:
     """Generic Tagger, supports any dictionary.
 
@@ -158,7 +166,7 @@ cdef class GenericTagger:
     cdef mecab_t* c_tagger
     cdef object wrapper
 
-    def __init__(self, arg='', wrapper=tuple):
+    def __init__(self, arg='', wrapper=make_tuple):
         arg = bytes(arg, 'utf-8')
         self.c_tagger = mecab_new2(arg)
         if self.c_tagger == NULL:
