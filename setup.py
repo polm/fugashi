@@ -42,7 +42,7 @@ extensions = Extension('fugashi',
         include_dirs=include_dirs)
 
 setup(name='fugashi', 
-      version='0.1.6',
+      use_scm_version=True,
       author="Paul O'Leary McCann",
       author_email="polm@dampfkraft.com",
       description="A Cython wrapper for MeCab",
@@ -58,4 +58,4 @@ setup(name='fugashi',
       python_requires='>=3.6',
       ext_modules=[extensions],
       data_files=data_files,
-      setup_requires=['wheel', 'Cython'])
+      setup_requires=['wheel', 'Cython', 'setuptools_scm'])
