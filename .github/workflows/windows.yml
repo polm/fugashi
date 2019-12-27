@@ -44,7 +44,8 @@ jobs:
       if: steps.cache-mecab.outputs.cache-hit !=  'true'
       shell: bash
       run: |
-        wget -O mecab-msvc-x64.zip "https://github.com/chezou/mecab/releases/download/mecab-0.996-msvc-5/mecab-msvc-x64.zip"
+        # Temporarily skip this since the cache doesn't seem to work as intended 2019-12-27
+        #curl -LO "https://github.com/chezou/mecab/releases/download/mecab-0.996-msvc-5/mecab-msvc-x64.zip"
         unzip "mecab-msvc-x64.zip" -d c:/mecab
     - name: Install dependencies
       run: |
