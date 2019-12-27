@@ -45,7 +45,7 @@ jobs:
       shell: bash
       run: |
         curl -LO "https://github.com/chezou/mecab/releases/download/mecab-0.996-msvc-5/mecab-msvc-x64.zip"
-        unzip "mecab-msvc-x64.zip" -d c:/mecab
+        unzip -o "mecab-msvc-x64.zip" -d c:/mecab
     - name: Install dependencies
       run: |
         python -m pip install --upgrade setuptools wheel pip
