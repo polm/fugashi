@@ -30,7 +30,14 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Cache mecab
+      id: cache-mecab
+      uses: actions/cache@v1
+      with:
+        path: C:/mecab
+        key: mecab-win-build
     - name: Download MeCab Win and Unzip it
+      if: steps.cache-mecab.outputs.cache-hit != 'true'
       shell: bash
       run: |
         curl -LO "https://github.com/chezou/mecab/releases/download/mecab-0.996-msvc-5/mecab-msvc-x64.zip"
