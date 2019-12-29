@@ -1,3 +1,5 @@
+[![Current PyPI packages](https://badge.fury.io/py/fugashi.svg)](https://pypi.org/project/fugashi/)
+
 # fugashi
 
 <img src="https://github.com/polm/fugashi/raw/master/fugashi.png" width=125 height=125 alt="Fugashi by Irasutoya" />
