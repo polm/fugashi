@@ -56,7 +56,7 @@ setup(name='fugashi',
           "License :: OSI Approved :: MIT License",
           "Natural Language :: Japanese",
           ],
-      python_requires='>=3.6',
+      python_requires='>=3.7',
       ext_modules=[extensions],
       data_files=data_files,
       setup_requires=['wheel', 'Cython', 'setuptools_scm'])
