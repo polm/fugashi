@@ -1,45 +1,29 @@
 import pathlib
 import setuptools
 import subprocess
-import os
 from distutils.core import setup
 from distutils.extension import Extension
 
-def mecab_config(arg):
-	output = subprocess.check_output(["mecab-config", arg])
+from fugashi_util import check_libmecab
 
-	if not isinstance(output, str):
-		output = output.decode("utf-8")
+# get the build parameters
+output, data_files = check_libmecab()
 
-	return output.split()
-
-is_windows = os.name == 'nt'
-
-win_mecab_dir = r'C:\mecab'
-win_sdk_dir = win_mecab_dir
-win_bin_dir = win_mecab_dir
-# If you want to use official Windows binary, you can comment out following variables
-#is_64bits = sys.maxsize > 2**32
-#win_mecab_dir = r'C:\Program Files{}\MeCab'.format('' if is_64bits else ' (x86)')
-#win_sdk_dir = r'{}\sdk'.format(win_mecab_dir)
-#win_bin_dir = r'{}\bin'.format(win_mecab_dir)
-
-if is_windows:
-    include_dirs = [win_sdk_dir]
-    library_dirs = [win_sdk_dir]
-    libraries = ["libmecab"]
-    data_files = [("lib\\site-packages\\", ["{}\\libmecab.dll".format(win_bin_dir)])]
-else:
-    include_dirs = mecab_config("--inc-dir")
-    library_dirs = mecab_config("--libs-only-L")
-    libraries = mecab_config("--libs-only-l")
-    data_files = []
+# pad the list in case something's missing
+mecab_config = list(output) + ([''] * 5)
+include_dirs = mecab_config[0].split()
+library_dirs = mecab_config[1].split()
+libraries = mecab_config[2].split()
+extra_objects = mecab_config[3].split()
+extra_link_args = mecab_config[4].split()
 
 extensions = Extension('fugashi', 
         ['fugashi/fugashi.pyx'], 
         libraries=libraries,
         library_dirs=library_dirs,
-        include_dirs=include_dirs)
+        include_dirs=include_dirs,
+        extra_objects=extra_objects,
+        extra_link_args=extra_link_args)
 
 setup(name='fugashi', 
       version='0.1.8',
