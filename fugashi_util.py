@@ -62,6 +62,7 @@ def mecab_config_linux_build():
     subprocess.run(["make", "libmecab.la"])
     src_dir = "build/mecab/mecab/mecab/src"
     lib_dir = "libmecab"
+
     if os.path.isfile("libmecab.so"):
         os.chdir(base_dir)
         data_files = [(lib_dir, glob.glob(src_dir + "/libmecab.*"))]
@@ -69,10 +70,15 @@ def mecab_config_linux_build():
         os.symlink(".libs/libmecab.so", "libmecab.so")
         os.chdir(base_dir)
         data_files = [(lib_dir, glob.glob(src_dir + "/.libs/libmecab.*"))]
+
+    # This seems to be necessary in practice on manylinux1
+    os.symlink("libmecab.so", "libmecab.so.2")
+
     if platform.platform().startswith("Darwin"):
         lib_arg = "-rpath {}".format(lib_dir)
     else:
         lib_arg = "-Wl,-rpath={}".format(lib_dir)
+
     mecab_details = (src_dir, src_dir, 'mecab stdc++', lib_arg)
     return mecab_details, data_files
 
