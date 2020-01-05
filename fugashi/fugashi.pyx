@@ -218,6 +218,14 @@ cdef class Tagger(GenericTagger):
     """
 
     def __init__(self, arg=''):
+        # Use pip installed unidic if available
+        try:
+            import unidic
+            arg = '-d{} '.format(unidic.DICDIR) + arg
+        except ImportError:
+            # It's fine if you use the system dictionary
+            pass
+
         super().__init__(arg)
 
         fields = self.parseToNodeList("日本")[0].feature_raw.split(',')

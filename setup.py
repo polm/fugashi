@@ -58,4 +58,5 @@ setup(name='fugashi',
       python_requires='>=3.7',
       ext_modules=[extensions],
       data_files=data_files,
+      extras_require={'unidic': ['unidic']},
       setup_requires=['wheel', 'Cython'])
