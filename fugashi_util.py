@@ -104,3 +104,4 @@ def check_libmecab():
         except:
             # failure is normal, typically just a different platform
             os.chdir(cwd)
+    return [], []
