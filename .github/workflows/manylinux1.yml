@@ -1,0 +1,19 @@
+name: Build manylinux1 wheels
+
+on:
+  push:
+    branches: 
+      - manylinux
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build manylinux Python wheels
+      uses: polm/mecab-manylinux1-wheel-builder@v0.1.2
+    - name: Upload Wheels
+      uses: actions/upload-artifact@v1
+      with: 
+        name: manylinux1-wheels
+        path: manylinux1-wheels

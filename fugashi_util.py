@@ -42,7 +42,7 @@ def mecab_config_debian_user():
         subprocess.run(["dpkg", "-x", deb, "."])
     mc,dummy = mecab_config("usr/bin/mecab-config")
     os.chdir(base_dir)
-    lib_dir = "libmecab"
+    lib_dir = site.USER_BASE + "/lib/mecab"
     mecab_details = ("build/mecab" + mc[0], "build/mecab" + mc[1], mc[2], '-Wl,-rpath={}'.format(lib_dir))
     data_files = [(lib_dir, glob.glob("build/mecab" + mc[1] + "/libmecab.*"))]
     return mecab_details, data_files
@@ -61,8 +61,7 @@ def mecab_config_linux_build():
     os.chdir("src")
     subprocess.run(["make", "libmecab.la"])
     src_dir = "build/mecab/mecab/mecab/src"
-    lib_dir = "libmecab"
-
+    lib_dir = site.USER_BASE + "/lib/mecab"
     if os.path.isfile("libmecab.so"):
         os.chdir(base_dir)
         data_files = [(lib_dir, glob.glob(src_dir + "/libmecab.*"))]
@@ -70,15 +69,10 @@ def mecab_config_linux_build():
         os.symlink(".libs/libmecab.so", "libmecab.so")
         os.chdir(base_dir)
         data_files = [(lib_dir, glob.glob(src_dir + "/.libs/libmecab.*"))]
-
-    # This seems to be necessary in practice on manylinux1
-    os.symlink("libmecab.so", "libmecab.so.2")
-
     if platform.platform().startswith("Darwin"):
         lib_arg = "-rpath {}".format(lib_dir)
     else:
         lib_arg = "-Wl,-rpath={}".format(lib_dir)
-
     mecab_details = (src_dir, src_dir, 'mecab stdc++', lib_arg)
     return mecab_details, data_files
 
