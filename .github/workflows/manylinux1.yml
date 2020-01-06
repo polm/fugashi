@@ -3,7 +3,7 @@ name: Build manylinux1 wheels
 on:
   push:
     branches: 
-      - manylinux
+      - master
 
 jobs:
   deploy:
