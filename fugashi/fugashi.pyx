@@ -155,6 +155,23 @@ def make_tuple(*args):
     """
     return tuple(args)
 
+
+TAGGER_FAILURE = """
+Failed to initialize the Tagger. Typically this means a dictionary could not be
+found. Things to check:
+
+- Are your Tagger arguments correct?
+
+- Have you installed the MeCab C++ program?
+
+- Have you installed UniDic or another dictionary? Currently fugashi requires
+  you to install a dictionary, and UniDic is strongly recommended.
+
+Instructions for installing MeCab and Unidic:
+
+    https://www.dampfkraft.com/nlp/japanese-spacy-and-mecab.html
+"""
+
 cdef class GenericTagger:
     """Generic Tagger, supports any dictionary.
 
@@ -173,7 +190,7 @@ cdef class GenericTagger:
             # In theory mecab_strerror should return an error string from MeCab
             # It doesn't seem to work and just returns b'' though, so this will
             # have to do.
-            raise RuntimeError("Couldn't create Tagger. Maybe your arguments are invalid?")
+            raise RuntimeError(TAGGER_FAILURE)
         self.wrapper = wrapper
 
     def parse(self, str text):
@@ -235,7 +252,7 @@ cdef class Tagger(GenericTagger):
         elif len(fields) == 29:
             self.wrapper = UnidicFeatures29
         else:
-            raise RuntimeError("Unknown Dictionary Format, use a GenericTagger")
+            raise RuntimeError("Unknown dictionary format, use a GenericTagger.")
 
     # This needs to be overridden to change the node type.
     cdef wrap(self, const mecab_node_t* node):
