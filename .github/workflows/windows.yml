@@ -53,8 +53,8 @@ jobs:
         path: dist
     - name: Check wheels
       shell: bash
-      working-directory: dist
       run: |
         ls -la
-        pip install "fugashi-0.1.9rc1-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-win_amd64.whl"
+        VERSION=$(python setup.py --version)
+        pip install "dist/fugashi-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-win_amd64.whl"
 
