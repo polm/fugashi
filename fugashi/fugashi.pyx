@@ -121,6 +121,19 @@ cdef class UnidicNode(Node):
     def pos(self):
         return "{},{},{},{}".format(*self.feature[:4])
 
+    @staticmethod
+    cdef UnidicNode wrap(const mecab_node_t* c_node, object wrapper):
+        # This has to be copied from the base node to change the type
+        cdef UnidicNode node = UnidicNode.__new__(UnidicNode)
+        node.c_node = c_node
+        node.wrapper = wrapper
+
+        # The surface gets freed so we need to copy it here
+        # Also note it's not zero terminated.
+        node.surface = c_node.surface[:c_node.length].decode('utf-8')
+
+        return node
+
 cdef class KoreanNode(Node):
     """Node for mecab-ko-dic. Handles nested entries.
     """
@@ -146,6 +159,19 @@ cdef class KoreanNode(Node):
         if self._eomi is None:
             self._tag, _, self._eomi = self.feature.pos.partition('+')
         return self._eomi
+
+    @staticmethod
+    cdef KoreanNode wrap(const mecab_node_t* c_node, object wrapper):
+        # This has to be copied from the base node to change the type
+        cdef KoreanNode node = KoreanNode.__new__(KoreanNode)
+        node.c_node = c_node
+        node.wrapper = wrapper
+
+        # The surface gets freed so we need to copy it here
+        # Also note it's not zero terminated.
+        node.surface = c_node.surface[:c_node.length].decode('utf-8')
+
+        return node
 
 def make_tuple(*args):
     """Take variable number of args, return tuple.

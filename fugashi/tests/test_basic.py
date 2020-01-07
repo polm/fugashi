@@ -17,6 +17,10 @@ NBEST_TESTS = (
         ("深海魚は、深海に生息する魚類の総称。", '深海 魚 は 、 深海 に 生息 する 魚類 の 総称 。 \n深 海魚 は 、 深海 に 生息 する 魚類 の 総称 。'),
         )
 
+POS_TESTS = (
+        ('日本語', ['名詞,固有名詞,地名,国', '名詞,普通名詞,一般,*']),
+        )
+
 @pytest.mark.parametrize('text,wakati', WAKATI_TESTS)
 def test_wakati(text, wakati):
     tagger = Tagger('-Owakati')
@@ -40,3 +44,10 @@ def test_invalid_args():
     # don't try to use the null object!
     with pytest.raises(RuntimeError):
         tagger = Tagger('-fail')
+
+@pytest.mark.parametrize('text,tags', POS_TESTS)
+def test_pos(text, tags):
+    # There should be a pos property when using the default tagger
+    tagger = Tagger()
+    tags_ = [tok.pos for tok in tagger.parseToNodeList("日本語")]
+    assert tags == tags_
