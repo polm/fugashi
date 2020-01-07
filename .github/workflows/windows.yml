@@ -56,5 +56,5 @@ jobs:
       working-directory: dist
       run: |
         ls -la
-        pip install "fugashi-*-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-win_amd64.whl"
+        pip install "fugashi-0.1.9rc1-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-win_amd64.whl"
 
