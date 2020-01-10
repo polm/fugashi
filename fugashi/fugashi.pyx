@@ -1,6 +1,7 @@
 from mecab cimport (mecab_new2, mecab_sparse_tostr2, mecab_t, mecab_node_t,
         mecab_sparse_tonode, mecab_nbest_sparse_tostr)
 from collections import namedtuple
+import os
 
 # field names can be found in the dicrc file distributed with Unidic or here:
 # https://unidic.ninjal.ac.jp/faq
@@ -273,7 +274,7 @@ cdef class Tagger(GenericTagger):
         # Use pip installed unidic if available
         try:
             import unidic
-            MECABRC = os.join(unidic.DICDIR, 'mecabrc')
+            MECABRC = os.path.join(unidic.DICDIR, 'mecabrc')
             arg = '-r{} -d{} '.format(MECABRC, unidic.DICDIR) + arg
         except ImportError:
             # It's fine if you use the system dictionary
