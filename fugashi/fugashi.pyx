@@ -271,12 +271,13 @@ cdef class Tagger(GenericTagger):
 
     def __init__(self, arg=''):
         # Use pip installed unidic if available
-        #try:
-        #    import unidic
-        #    arg = '-d{} '.format(unidic.DICDIR) + arg
-        #except ImportError:
-        #    # It's fine if you use the system dictionary
-        #    pass
+        try:
+            import unidic
+            MECABRC = os.join(unidic.DICDIR, 'mecabrc')
+            arg = '-r{} -d{} '.format(MECABRC, unidic.DICDIR) + arg
+        except ImportError:
+            # It's fine if you use the system dictionary
+            pass
 
         super().__init__(arg)
 
