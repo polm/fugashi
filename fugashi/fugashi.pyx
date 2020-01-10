@@ -5,11 +5,20 @@ from collections import namedtuple
 # field names can be found in the dicrc file distributed with Unidic or here:
 # https://unidic.ninjal.ac.jp/faq
 
-# 2.1.2 schema
-UnidicFeatures17 = namedtuple('UnidicFeatures16', 
-        ('pos1 pos2 pos3 pos4 cType cForm lForm lemma orth pron ' 
+# 2.1.2 src schema
+UnidicFeatures17 = namedtuple('UnidicFeatures17',
+        ('pos1 pos2 pos3 pos4 cType cForm lForm lemma orth pron '
         'orthBase pronBase goshu iType iForm fType fForm').split(' '),
         defaults=((None,) * 17))
+
+# 2.1.2 bin schema
+# The unidic-mecab-2.1.2_bin distribution adds kana accent fields.
+UnidicFeatures26 = namedtuple('UnidicFeatures26',
+        ('pos1 pos2 pos3 pos4 cType cForm lForm lemma orth pron '
+        'orthBase pronBase goshu iType iForm fType fForm '
+        'kana kanaBase form formBase iConType fConType aType '
+        'aConType aModeType').split(' '),
+        defaults=((None,) * 26))
 
 # schema used in 2.2.0, 2.3.0
 UnidicFeatures29 = namedtuple('UnidicFeatures29', 'pos1 pos2 pos3 pos4 cType '
@@ -275,6 +284,8 @@ cdef class Tagger(GenericTagger):
 
         if len(fields) == 17:
             self.wrapper = UnidicFeatures17
+        if len(fields) == 26:
+            self.wrapper = UnidicFeatures26
         elif len(fields) == 29:
             self.wrapper = UnidicFeatures29
         else:
