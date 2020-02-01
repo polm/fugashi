@@ -49,5 +49,5 @@ def test_invalid_args():
 def test_pos(text, tags):
     # There should be a pos property when using the default tagger
     tagger = Tagger()
-    tags_ = [tok.pos for tok in tagger.parseToNodeList("日本語")]
+    tags_ = [tok.pos for tok in tagger.parseToNodeList(text)]
     assert tags == tags_
