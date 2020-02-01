@@ -1,3 +1,5 @@
+## NOTE: These tests are written again the 2.1.2 binary distribution of Unidic.
+
 from fugashi import Tagger
 import pytest
 
