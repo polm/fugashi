@@ -286,7 +286,7 @@ cdef class Tagger(GenericTagger):
 
         if len(fields) == 17:
             self.wrapper = UnidicFeatures17
-        if len(fields) == 26:
+        elif len(fields) == 26:
             self.wrapper = UnidicFeatures26
         elif len(fields) == 29:
             self.wrapper = UnidicFeatures29
