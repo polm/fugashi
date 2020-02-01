@@ -23,6 +23,10 @@ POS_TESTS = (
         ('日本語', ['名詞,固有名詞,地名,国', '名詞,普通名詞,一般,*']),
         )
 
+ACCENT_TESTS = (
+        ('稻村に行きました', ['0,2', '*', '0', '*', '*']),
+        )
+
 @pytest.mark.parametrize('text,wakati', WAKATI_TESTS)
 def test_wakati(text, wakati):
     tagger = Tagger('-Owakati')
@@ -53,3 +57,11 @@ def test_pos(text, tags):
     tagger = Tagger()
     tags_ = [tok.pos for tok in tagger.parseToNodeList(text)]
     assert tags == tags_
+
+@pytest.mark.parametrize('text,accent', ACCENT_TESTS)
+def test_accent(text, accent):
+    # This checks for correct handling of feature fields containing commas as reported in #13
+    tagger = Tagger()
+    accent_ = [tok.feature.aType for tok in tagger.parseToNodeList(text)]
+    assert accent_ == accent
+

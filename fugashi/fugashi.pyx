@@ -2,6 +2,7 @@ from mecab cimport (mecab_new2, mecab_sparse_tostr2, mecab_t, mecab_node_t,
         mecab_sparse_tonode, mecab_nbest_sparse_tostr)
 from collections import namedtuple
 import os
+import csv
 
 # field names can be found in the dicrc file distributed with Unidic or here:
 # https://unidic.ninjal.ac.jp/faq
@@ -105,7 +106,14 @@ cdef class Node:
             return ' ' * (self.rlength - self.length)
 
     cdef void set_feature(self, bytes feature):
-        fields = feature.decode('utf-8').split(',')
+        raw = feature.decode('utf-8')
+        if '"' in raw:
+            # This happens when a field contains commas. In Unidic this only
+            # happens for the "aType" field used for accent data, and then only
+            # a minority of the time. 
+            fields = next(csv.reader([raw]))
+        else:
+            fields = raw.split(',')
         self.features = self.wrapper(*fields)
 
     @staticmethod
