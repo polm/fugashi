@@ -1,0 +1,17 @@
+name: Test in manylinux
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+        python-version: [ 3.5, 3.6, 3.7, 3.8 ]
+    env:
+        PYTHON: ${{ matrix.python-version }}
+    steps:
+    - uses: actions/checkout@v1
+    - run: docker build -t fugashi .
+    - name: setup and test
+      run: docker run -v $(pwd):/workdir -w /workdir fugashi sh -c "$PYTHON -m pip install pytest wheel && $PYTHON setup.py build_ext --inplace && $PYTHON -m pytest"
