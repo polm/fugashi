@@ -10,7 +10,7 @@ jobs:
       matrix:
         python-version: [ 3.5, 3.6, 3.7, 3.8 ]
     env:
-      PYTHON: ${{ matrix.python-version }}
+      PYTHON: python${{ matrix.python-version }}
     steps:
     - uses: actions/checkout@v1
     - run: docker build -t fugashi .
