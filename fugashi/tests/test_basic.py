@@ -1,6 +1,6 @@
 ## NOTE: These tests are written again the 2.1.2 binary distribution of Unidic.
 
-from fugashi import Tagger
+from fugashi import Tagger, UnidicFeatures17
 import pytest
 
 WAKATI_TESTS = (
@@ -62,6 +62,10 @@ def test_pos(text, tags):
 def test_accent(text, accent):
     # This checks for correct handling of feature fields containing commas as reported in #13
     tagger = Tagger()
-    accent_ = [tok.feature.aType for tok in tagger.parseToNodeList(text)]
+    tokens = tagger.parseToNodeList(text)
+    # Skip if UnidicFeatures17 is used because it doesn't have 'atype' attribute
+    if tokens and isinstance(tokens[0].feature, UnidicFeatures17):
+        pytest.skip()
+    accent_ = [tok.feature.aType for tok in tokens]
     assert accent_ == accent
 

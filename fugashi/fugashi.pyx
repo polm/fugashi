@@ -10,8 +10,7 @@ import csv
 # 2.1.2 src schema
 UnidicFeatures17 = namedtuple('UnidicFeatures17',
         ('pos1 pos2 pos3 pos4 cType cForm lForm lemma orth pron '
-        'orthBase pronBase goshu iType iForm fType fForm').split(' '),
-        defaults=((None,) * 17))
+        'orthBase pronBase goshu iType iForm fType fForm').split(' '))
 
 # 2.1.2 bin schema
 # The unidic-mecab-2.1.2_bin distribution adds kana accent fields.
@@ -19,20 +18,19 @@ UnidicFeatures26 = namedtuple('UnidicFeatures26',
         ('pos1 pos2 pos3 pos4 cType cForm lForm lemma orth pron '
         'orthBase pronBase goshu iType iForm fType fForm '
         'kana kanaBase form formBase iConType fConType aType '
-        'aConType aModeType').split(' '),
-        defaults=((None,) * 26))
+        'aConType aModeType').split(' '))
 
 # schema used in 2.2.0, 2.3.0
 UnidicFeatures29 = namedtuple('UnidicFeatures29', 'pos1 pos2 pos3 pos4 cType '
         'cForm lForm lemma orth pron orthBase pronBase goshu iType iForm fType '
         'fForm iConType fConType type kana kanaBase form formBase aType aConType '
-        'aModType lid lemma_id'.split(' '), defaults=((None,) * 29))
+        'aModType lid lemma_id'.split(' '))
 
 # mecab-ko-dic v2.0
 # https://docs.google.com/spreadsheets/d/1-9blXKjtjeKZqsf4NzHeYJCrr49-nXeRF6D80udfcwY/edit#gid=1718487366
 # note that unks seems to have the same number of fields as actual entries
 KoreanFeatures = namedtuple('KoreanFeatures', 'pos semantic_class jongseong ' 
-        'reading type start_pos end_pos expression', defaults=((None,) * 8))
+        'reading type start_pos end_pos expression')
 
 cdef class Node:
     """Generic Nodes are modeled after the data returned from MeCab.
@@ -104,6 +102,10 @@ cdef class Node:
             return ''
         else:
             return ' ' * (self.rlength - self.length)
+        
+    cdef list pad_none(self, list fields):
+        d = len(self.wrapper._fields) - len(fields)
+        return fields + [None] * d
 
     cdef void set_feature(self, bytes feature):
         raw = feature.decode('utf-8')
@@ -114,6 +116,7 @@ cdef class Node:
             fields = next(csv.reader([raw]))
         else:
             fields = raw.split(',')
+        fields = self.pad_none(fields)
         self.features = self.wrapper(*fields)
 
     @staticmethod
