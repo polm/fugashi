@@ -17,10 +17,6 @@ libraries = mecab_config[2].split()
 extra_objects = mecab_config[3].split()
 extra_link_args = mecab_config[4].split()
 
-import platform
-if platform.platform().startswith("Darwin"):
-    extra_link_args = ["-stdlib=libc++", "-mmacosx-version-min=10.9"]
-
 extensions = Extension('fugashi', 
         ['fugashi/fugashi.pyx'], 
         libraries=libraries,
