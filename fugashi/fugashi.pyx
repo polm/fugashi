@@ -1,8 +1,10 @@
-from mecab cimport (mecab_new2, mecab_sparse_tostr2, mecab_t, mecab_node_t,
+from mecab cimport (mecab_new, mecab_sparse_tostr2, mecab_t, mecab_node_t,
         mecab_sparse_tonode, mecab_nbest_sparse_tostr)
 from collections import namedtuple
 import os
 import csv
+import shlex
+from libc.stdlib cimport malloc, free
 
 # field names can be found in the dicrc file distributed with Unidic or here:
 # https://unidic.ninjal.ac.jp/faq
@@ -230,9 +232,17 @@ cdef class GenericTagger:
     cdef mecab_t* c_tagger
     cdef object wrapper
 
-    def __init__(self, arg='', wrapper=make_tuple):
-        arg = bytes(arg, 'utf-8')
-        self.c_tagger = mecab_new2(arg)
+    def __init__(self, args='', wrapper=make_tuple):
+        # The first argument is ignored because in the MeCab binary the argc
+        # and argv for the process are used here.
+        args = [b'fugashi'] + [bytes(arg, 'utf-8') for arg in shlex.split(args)]
+        cdef int argc = len(args)
+        cdef char** argv = <char**>malloc(argc * sizeof(char*))
+        for ii, arg in enumerate(args):
+            argv[ii] = arg
+
+        self.c_tagger = mecab_new(argc, argv)
+        free(argv)
         if self.c_tagger == NULL:
             # In theory mecab_strerror should return an error string from MeCab
             # It doesn't seem to work and just returns b'' though, so this will
