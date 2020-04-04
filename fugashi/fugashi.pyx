@@ -59,6 +59,8 @@ cdef class Node:
 
     @property
     def surface(self):
+        if self.surface is None:
+            self.surface = self.c_node.surface[:self.c_node.length].decode('utf-8')
         return self.surface
     
     @property
@@ -127,7 +129,7 @@ cdef class Node:
 
         # The surface gets freed so we need to copy it here
         # Also note it's not zero terminated.
-        node.surface = c_node.surface[:c_node.length].decode('utf-8')
+        #node.surface = c_node.surface[:c_node.length].decode('utf-8')
 
         return node
 
@@ -151,7 +153,7 @@ cdef class UnidicNode(Node):
 
         # The surface gets freed so we need to copy it here
         # Also note it's not zero terminated.
-        node.surface = c_node.surface[:c_node.length].decode('utf-8')
+        #node.surface = c_node.surface[:c_node.length].decode('utf-8')
 
         return node
 
@@ -190,7 +192,7 @@ cdef class KoreanNode(Node):
 
         # The surface gets freed so we need to copy it here
         # Also note it's not zero terminated.
-        node.surface = c_node.surface[:c_node.length].decode('utf-8')
+        #node.surface = c_node.surface[:c_node.length].decode('utf-8')
 
         return node
 
@@ -231,6 +233,12 @@ cdef class GenericTagger:
     cdef object wrapper
 
     def __init__(self, arg='', wrapper=make_tuple):
+        # The -C option makes MeCab allocate a new copy of the input everytime
+        # it's parsed. This doesn't matter for string output, but it's
+        # important for node-based output to avoid needing to copy all the
+        # strings.
+        arg = '-C ' + arg
+
         arg = bytes(arg, 'utf-8')
         self.c_tagger = mecab_new2(arg)
         if self.c_tagger == NULL:
