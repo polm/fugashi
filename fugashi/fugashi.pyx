@@ -61,6 +61,8 @@ cdef class Node:
 
     @property
     def surface(self):
+        if self.surface is None:
+            self.surface = self.c_node.surface[:self.c_node.length].decode('utf-8')
         return self.surface
     
     @property
@@ -129,7 +131,7 @@ cdef class Node:
 
         # The surface gets freed so we need to copy it here
         # Also note it's not zero terminated.
-        node.surface = c_node.surface[:c_node.length].decode('utf-8')
+        #node.surface = c_node.surface[:c_node.length].decode('utf-8')
 
         return node
 
@@ -153,7 +155,7 @@ cdef class UnidicNode(Node):
 
         # The surface gets freed so we need to copy it here
         # Also note it's not zero terminated.
-        node.surface = c_node.surface[:c_node.length].decode('utf-8')
+        #node.surface = c_node.surface[:c_node.length].decode('utf-8')
 
         return node
 
@@ -192,7 +194,7 @@ cdef class KoreanNode(Node):
 
         # The surface gets freed so we need to copy it here
         # Also note it's not zero terminated.
-        node.surface = c_node.surface[:c_node.length].decode('utf-8')
+        #node.surface = c_node.surface[:c_node.length].decode('utf-8')
 
         return node
 
