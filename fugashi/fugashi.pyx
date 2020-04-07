@@ -41,7 +41,7 @@ cdef class Node:
     Some data is in a strict format using enums, but most useful data is in the
     feature string, which is an untokenized CSV string."""
     cdef const mecab_node_t* c_node
-    cdef str surface
+    cdef str _surface
     cdef object features
     cdef object wrapper
 
@@ -62,9 +62,9 @@ cdef class Node:
 
     @property
     def surface(self):
-        if self.surface is None:
-            self.surface = self.c_node.surface[:self.c_node.length].decode('utf-8')
-        return self.surface
+        if self._surface is None:
+            self._surface = self.c_node.surface[:self.c_node.length].decode('utf-8')
+        return self._surface
     
     @property
     def feature(self):
@@ -226,7 +226,7 @@ cdef class GenericTagger:
     def __init__(self, args='', wrapper=make_tuple):
         # The first argument is ignored because in the MeCab binary the argc
         # and argv for the process are used here.
-        args = [b'fugashi'] + [bytes(arg, 'utf-8') for arg in shlex.split(args)]
+        args = [b'fugashi', b'-C'] + [bytes(arg, 'utf-8') for arg in shlex.split(args)]
         cdef int argc = len(args)
         cdef char** argv = <char**>malloc(argc * sizeof(char*))
         for ii, arg in enumerate(args):
