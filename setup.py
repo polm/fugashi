@@ -26,7 +26,7 @@ extensions = Extension('fugashi',
         extra_link_args=extra_link_args)
 
 setup(name='fugashi', 
-      version='0.1.11',
+      version='0.1.12rc1',
       author="Paul O'Leary McCann",
       author_email="polm@dampfkraft.com",
       description="A Cython wrapper for MeCab",
