@@ -315,7 +315,7 @@ cdef class Tagger(GenericTagger):
         unidicdir = try_import_unidic()
         if unidicdir:
             mecabrc = os.path.join(unidicdir, 'mecabrc')
-            arg = '-r{} -d{} '.format(mecabrc, unidicdir) + arg
+            arg = '-r "{}" -d "{}" '.format(mecabrc, unidicdir) + arg
 
         super().__init__(arg)
 
