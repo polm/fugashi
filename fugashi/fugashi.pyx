@@ -1,5 +1,6 @@
 from mecab cimport (mecab_new, mecab_sparse_tostr2, mecab_t, mecab_node_t,
-        mecab_sparse_tonode, mecab_nbest_sparse_tostr)
+        mecab_sparse_tonode, mecab_nbest_sparse_tostr, 
+        mecab_dictionary_info_t, mecab_dictionary_info)
 from collections import namedtuple
 import os
 import csv
@@ -286,6 +287,21 @@ cdef class GenericTagger:
         cstr = bytes(text, 'utf-8')
         out = mecab_nbest_sparse_tostr(self.c_tagger, num, cstr).decode('utf-8')
         return out.rstrip()
+
+    @property
+    def dictionary_info(self):
+        """Get info on the dictionary of the tagger.
+
+        This only exposes basic information. The C API has functions for more
+        sophisticated access."""
+        cdef mecab_dictionary_info_t* dictinfo = mecab_dictionary_info(self.c_tagger)
+        info = {}
+        info['filename'] = dictinfo.filename.encode('utf-8')
+        info['charset'] = dictinfo.charset.encode('utf-8')
+        info['size'] = dictinfo.size
+        # Note this is generally not used reliably
+        info['version'] = dictinfo.version
+        return info
 
 cdef class Tagger(GenericTagger):
     """Default tagger. Detects the correct Unidic feature format.
