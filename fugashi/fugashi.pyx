@@ -284,8 +284,8 @@ cdef class GenericTagger:
         sophisticated access."""
         cdef mecab_dictionary_info_t* dictinfo = mecab_dictionary_info(self.c_tagger)
         info = {}
-        info['filename'] = dictinfo.filename.encode('utf-8')
-        info['charset'] = dictinfo.charset.encode('utf-8')
+        info['filename'] = dictinfo.filename.decode('utf-8')
+        info['charset'] = dictinfo.charset.decode('utf-8')
         info['size'] = dictinfo.size
         # Note this is generally not used reliably
         info['version'] = dictinfo.version
