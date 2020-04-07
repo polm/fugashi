@@ -303,6 +303,19 @@ cdef class GenericTagger:
         info['version'] = dictinfo.version
         return info
 
+def try_import_unidic():
+    """Import unidic or unidic lite if available. Return dicdir."""
+    try:
+        import unidic
+        return unidic.DICDIR
+    except ImportError:
+        try:
+            import unidic_lite
+            return unidic_lite.DICDIR
+        except ImportError:
+            # This is OK, just give up.
+            return
+
 cdef class Tagger(GenericTagger):
     """Default tagger. Detects the correct Unidic feature format.
 
@@ -311,13 +324,10 @@ cdef class Tagger(GenericTagger):
 
     def __init__(self, arg=''):
         # Use pip installed unidic if available
-        try:
-            import unidic
-            MECABRC = os.path.join(unidic.DICDIR, 'mecabrc')
-            arg = '-r{} -d{} '.format(MECABRC, unidic.DICDIR) + arg
-        except ImportError:
-            # It's fine if you use the system dictionary
-            pass
+        unidicdir = try_import_unidic()
+        if unidicdir:
+            mecabrc = os.path.join(unidicdir, 'mecabrc')
+            arg = '-r{} -d{} '.format(mecabrc, unidicdir) + arg
 
         super().__init__(arg)
 
