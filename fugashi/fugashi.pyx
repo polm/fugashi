@@ -130,10 +130,6 @@ cdef class Node:
         node.c_node = c_node
         node.wrapper = wrapper
 
-        # The surface gets freed so we need to copy it here
-        # Also note it's not zero terminated.
-        #node.surface = c_node.surface[:c_node.length].decode('utf-8')
-
         return node
 
 cdef class UnidicNode(Node):
@@ -153,10 +149,6 @@ cdef class UnidicNode(Node):
         cdef UnidicNode node = UnidicNode.__new__(UnidicNode)
         node.c_node = c_node
         node.wrapper = wrapper
-
-        # The surface gets freed so we need to copy it here
-        # Also note it's not zero terminated.
-        #node.surface = c_node.surface[:c_node.length].decode('utf-8')
 
         return node
 
@@ -192,10 +184,6 @@ cdef class KoreanNode(Node):
         cdef KoreanNode node = KoreanNode.__new__(KoreanNode)
         node.c_node = c_node
         node.wrapper = wrapper
-
-        # The surface gets freed so we need to copy it here
-        # Also note it's not zero terminated.
-        #node.surface = c_node.surface[:c_node.length].decode('utf-8')
 
         return node
 
