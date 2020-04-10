@@ -226,7 +226,12 @@ cdef class GenericTagger:
     def __init__(self, args='', wrapper=make_tuple):
         # The first argument is ignored because in the MeCab binary the argc
         # and argv for the process are used here.
-        args = [b'fugashi', b'-C'] + [bytes(arg, 'utf-8') for arg in shlex.split(args)]
+
+        shlexer = shlex.shlex(args)
+        shlexer.escape = '' # mecab handles backslashes internally, don't do it here
+        shlexer.whitespace_split = True # otherwise we get fine-grained tokens
+        args = [b'fugashi', b'-C'] + [bytes(arg, 'utf-8') for arg in list(shlexer)]
+
         cdef int argc = len(args)
         cdef char** argv = <char**>malloc(argc * sizeof(char*))
         for ii, arg in enumerate(args):
@@ -315,7 +320,7 @@ cdef class Tagger(GenericTagger):
         unidicdir = try_import_unidic()
         if unidicdir:
             mecabrc = os.path.join(unidicdir, 'mecabrc')
-            arg = '-r "{}" -d "{}" '.format(mecabrc, unidicdir) + arg
+            arg = "-r '{}' -d '{}' ".format(mecabrc, unidicdir) + arg
 
         super().__init__(arg)
 
