@@ -5,12 +5,15 @@
 <img src="https://github.com/polm/fugashi/raw/master/fugashi.png" width=125 height=125 alt="Fugashi by Irasutoya" />
 
 Fugashi is a Cython wrapper for [MeCab](https://taku910.github.io/mecab/).
+Wheels are provided for Linux, OSX, and Win64, and UniDic is easy to install
+(see docs below).
 
 See the [blog post](https://www.dampfkraft.com/nlp/fugashi.html) for background
 on why Fugashi exists and some of the design decisions.
 
-Any reasonable version of MeCab should work, but it's recommended you install
-[from source](https://github.com/taku910/mecab).
+If you are on an unsupported platform (like PowerPC), you'll need to install
+MeCab first. It's recommended you install [from
+source](https://github.com/taku910/mecab).
 
 ## Usage
 
@@ -23,6 +26,28 @@ Any reasonable version of MeCab should work, but it's recommended you install
     for word in tagger.parseToNodeList(text):
         print(word, word.feature.lemma, word.pos, sep='\t')
         # "feature" is the Unidic feature data as a named tuple
+
+## Installing a Dictionary
+
+Fugashi requires a dictionary. [UniDic](https://unidic.ninjal.ac.jp/) is
+recommended, and two easy-to-install versions are provided.
+
+  - [unidic-lite](https://github.com/polm/unidic-lite), a 2013 version of Unidic that's relatively small
+  - [unidic](https://github.com/polm/unidic-py), the latest UniDic 2.3.0, which is 1GB on disk and requires a separate download step
+
+If you just want to make sure things work you can start with `unidic-lite`, but
+for more serious processing `unidic` is recommended. For production use you'll
+generally want to generate your own dictionary too; for details see the [MeCab
+documentation](https://taku910.github.io/mecab/learn.html).
+
+To get either of these dictionaries, you can install them directly using `pip`
+or do the below:
+
+    pip install fugashi[unidic-lite]
+
+    # The full version of UniDic requires a separate download step
+    pip install fugashi[unidic]
+    python -m unidic download
 
 ## Dictionary Use
 
