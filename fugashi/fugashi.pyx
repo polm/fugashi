@@ -237,18 +237,27 @@ cdef class GenericTagger:
 
     @property
     def dictionary_info(self):
-        """Get info on the dictionary of the tagger.
+        """Get info on the dictionaries of the Tagger.
 
         This only exposes basic information. The C API has functions for more
-        sophisticated access."""
+        sophisticated access, though it's not clear how useful they are.
+
+        The dictionary info structs will be returned as a list of dictionaries.
+        If you have only the system dictionary that'll be the only dictionary,
+        but if you specify user dictionaries they'll also be present.
+        """
+        infos = []
         cdef mecab_dictionary_info_t* dictinfo = mecab_dictionary_info(self.c_tagger)
-        info = {}
-        info['filename'] = dictinfo.filename.decode('utf-8')
-        info['charset'] = dictinfo.charset.decode('utf-8')
-        info['size'] = dictinfo.size
-        # Note this is generally not used reliably
-        info['version'] = dictinfo.version
-        return info
+        while dictinfo:
+            info = {}
+            info['filename'] = dictinfo.filename.decode('utf-8')
+            info['charset'] = dictinfo.charset.decode('utf-8')
+            info['size'] = dictinfo.size
+            # Note this is generally not used reliably
+            info['version'] = dictinfo.version
+            dictinfo = dictinfo.next
+            infos.append(info)
+        return infos
 
 def try_import_unidic():
     """Import unidic or unidic lite if available. Return dicdir."""

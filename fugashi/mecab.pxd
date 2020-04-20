@@ -4,6 +4,7 @@ cdef extern from "mecab.h":
         char *charset
         unsigned int size
         unsigned short version
+        mecab_dictionary_info_t* next
         
     cdef struct mecab_node_t:
         mecab_node_t *prev
