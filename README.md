@@ -78,8 +78,9 @@ You can also create a dictionary wrapper to get feature information as a named t
 If you have a problem with Fugashi feel free to open an issue. However, there
 are some cases where it might be better to use a different library.
 
-- If you want to use MeCab but don't have a C compiler, use [natto-py](https://github.com/buruzaemon/natto-py).
+- If you want to use MeCab on a platform we don't have wheels for, but don't have a C compiler, use [natto-py](https://github.com/buruzaemon/natto-py).
 - If you don't want to deal with installing MeCab at all, try [SudachiPy](https://github.com/WorksApplications/SudachiPy).
+- If you need to work with Korean, try [KoNLPy](https://konlpy.org/en/latest/).
 
 Note that these are both slower than Fugashi according to a [benchmark I
 wrote](https://github.com/polm/ja-tokenizer-benchmark). 

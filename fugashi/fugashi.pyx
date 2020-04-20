@@ -29,12 +29,6 @@ UnidicFeatures29 = namedtuple('UnidicFeatures29', 'pos1 pos2 pos3 pos4 cType '
         'fForm iConType fConType type kana kanaBase form formBase aType aConType '
         'aModType lid lemma_id'.split(' '))
 
-# mecab-ko-dic v2.0
-# https://docs.google.com/spreadsheets/d/1-9blXKjtjeKZqsf4NzHeYJCrr49-nXeRF6D80udfcwY/edit#gid=1718487366
-# note that unks seems to have the same number of fields as actual entries
-KoreanFeatures = namedtuple('KoreanFeatures', 'pos semantic_class jongseong ' 
-        'reading type start_pos end_pos expression')
-
 cdef class Node:
     """Generic Nodes are modeled after the data returned from MeCab.
 
@@ -147,41 +141,6 @@ cdef class UnidicNode(Node):
     cdef UnidicNode wrap(const mecab_node_t* c_node, object wrapper):
         # This has to be copied from the base node to change the type
         cdef UnidicNode node = UnidicNode.__new__(UnidicNode)
-        node.c_node = c_node
-        node.wrapper = wrapper
-
-        return node
-
-cdef class KoreanNode(Node):
-    """Node for mecab-ko-dic. Handles nested entries.
-    """
-    
-    cdef str _lemma
-    cdef str _tag
-    cdef str _eomi
-
-    @property
-    def lemma(self):
-        if self._lemma is None:
-            self._lemma = self.feature.expression.split('/')[0]
-        return self._lemma
-
-    @property
-    def tag(self):
-        if self._tag is None:
-            self._tag, _, self._eomi = self.feature.pos.partition('+')
-        return self._tag
-    
-    @property
-    def eomi(self):
-        if self._eomi is None:
-            self._tag, _, self._eomi = self.feature.pos.partition('+')
-        return self._eomi
-
-    @staticmethod
-    cdef KoreanNode wrap(const mecab_node_t* c_node, object wrapper):
-        # This has to be copied from the base node to change the type
-        cdef KoreanNode node = KoreanNode.__new__(KoreanNode)
         node.c_node = c_node
         node.wrapper = wrapper
 
@@ -333,17 +292,6 @@ cdef class Tagger(GenericTagger):
     # This needs to be overridden to change the node type.
     cdef wrap(self, const mecab_node_t* node):
         return UnidicNode.wrap(node, self.wrapper)
-
-cdef class KoreanTagger(GenericTagger):
-    """Tagger for mecab-ko.
-    """
-    
-    def __init__(self, arg=''):
-        super().__init__(arg)
-        self.wrapper = KoreanFeatures
-    
-    cdef wrap(self, const mecab_node_t* node):
-        return KoreanNode.wrap(node, self.wrapper)
 
 def create_feature_wrapper(name, fields, default=None):
     """Create a namedtuple based wrapper for dictionary features.
