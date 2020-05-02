@@ -42,6 +42,7 @@ setup(name='fugashi',
       python_requires='>=3.5',
       ext_modules=[extensions],
       data_files=data_files,
+      scripts=['bin/cutlet'],
       extras_require={
           'unidic': ['unidic'],
           'unidic-lite': ['unidic-lite'],
