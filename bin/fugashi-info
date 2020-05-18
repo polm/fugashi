@@ -22,5 +22,5 @@ def info(args=''):
 
 
 if __name__ == '__main__':
-    args = ' '.join(sys.argv[2:])
+    args = ' '.join(sys.argv[1:])
     info(args)
