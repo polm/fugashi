@@ -37,7 +37,7 @@ def test_tokens(text, saved):
     # testing the token objects is tricky, so instead just check surfaces
     #TODO: maybe save serialized nodes to compare?
     tagger = Tagger()
-    tokens = [str(tok) for tok in tagger.parseToNodeList(text)]
+    tokens = [str(tok) for tok in tagger(text)]
     assert tokens == saved
 
 @pytest.mark.parametrize('text,saved', NBEST_TESTS)
@@ -55,14 +55,14 @@ def test_invalid_args():
 def test_pos(text, tags):
     # There should be a pos property when using the default tagger
     tagger = Tagger()
-    tags_ = [tok.pos for tok in tagger.parseToNodeList(text)]
+    tags_ = [tok.pos for tok in tagger(text)]
     assert tags == tags_
 
 @pytest.mark.parametrize('text,accent', ACCENT_TESTS)
 def test_accent(text, accent):
     # This checks for correct handling of feature fields containing commas as reported in #13
     tagger = Tagger()
-    tokens = tagger.parseToNodeList(text)
+    tokens = tagger(text)
     # Skip if UnidicFeatures17 is used because it doesn't have 'atype' attribute
     if tokens and isinstance(tokens[0].feature, UnidicFeatures17):
         pytest.skip()

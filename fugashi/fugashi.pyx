@@ -200,6 +200,10 @@ cdef class GenericTagger:
             raise RuntimeError(TAGGER_FAILURE)
         self.wrapper = wrapper
 
+    def __call__(self, text):
+        """Wrapper for parseToNodeList."""
+        return self.parseToNodeList(text)
+
     def parse(self, str text):
         btext = bytes(text, 'utf-8')
         out = mecab_sparse_tostr2(self.c_tagger, btext, len(btext)).decode('utf-8')

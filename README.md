@@ -4,9 +4,9 @@
 
 <img src="https://github.com/polm/fugashi/raw/master/fugashi.png" width=125 height=125 alt="Fugashi by Irasutoya" />
 
-Fugashi is a Cython wrapper for [MeCab](https://taku910.github.io/mecab/).
-Wheels are provided for Linux, OSX, and Win64, and UniDic is easy to install
-(see docs below).
+Fugashi is a Cython wrapper for [MeCab](https://taku910.github.io/mecab/), a
+Japanese tokenizer and morphological analysis tool.  Wheels are provided for
+Linux, OSX, and Win64, and UniDic is easy to install (see docs below).
 
 See the [blog post](https://www.dampfkraft.com/nlp/fugashi.html) for background
 on why Fugashi exists and some of the design decisions.
@@ -23,7 +23,7 @@ source](https://github.com/taku910/mecab).
     text = "麩菓子（ふがし）は、麩を主材料とした日本の菓子。"
     tagger.parse(text)
     # => '麩 菓子 （ ふ が し ） は 、 麩 を 主材 料 と し た 日本 の 菓子 。'
-    for word in tagger.parseToNodeList(text):
+    for word in tagger(text):
         print(word, word.feature.lemma, word.pos, sep='\t')
         # "feature" is the Unidic feature data as a named tuple
 
