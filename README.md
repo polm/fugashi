@@ -62,7 +62,7 @@ If you're using a dictionary besides Unidic you can use the GenericTagger like t
     # parse can be used as normal
     tagger.parse('something')
     # features from the dictionary can be accessed by field numbers
-    for word in tagger.parseToNodeList(text):
+    for word in tagger(text):
         print(word.surface, word.feature[0])
 
 You can also create a dictionary wrapper to get feature information as a named tuple. 
