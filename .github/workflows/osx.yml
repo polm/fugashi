@@ -57,4 +57,4 @@ jobs:
       run: |
         ls -la dist
         VERSION=$(python setup.py --version)
-        pip install "dist/fugashi-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-osx.whl"
+        pip install dist/fugashi-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-macosx*.whl
