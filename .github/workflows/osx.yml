@@ -36,7 +36,7 @@ jobs:
         cd mecab/mecab
         ./configure --enable-utf8-only
         make
-        make install
+        sudo make install
         cd ../..
 
         python -m pip install --upgrade setuptools wheel pip
