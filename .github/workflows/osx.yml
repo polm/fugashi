@@ -1,0 +1,55 @@
+name: Build OSX wheels
+
+on:
+  push:
+    branches:
+      - master
+      - osx-wheels
+
+jobs:
+
+  build:
+    runs-on: macos-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.5, 3.6, 3.7, 3.8]
+        include:
+          - python-version: 3.5
+            py-short: 35
+            py-short2: 35m
+          - python-version: 3.6
+            py-short: 36
+            py-short2: 36m
+          - python-version: 3.7
+            py-short: 37
+            py-short2: 37m
+          - python-version: 3.8
+            py-short: 38
+            py-short2: 38
+    steps:
+    - uses: actions/checkout@v1
+    - name: Download and build MeCab
+      shell: bash
+      run: |
+        git clone --depth=1 https://github.com/taku910/mecab.git
+        cd mecab/mecab
+        ./configure --enable-utf8-only
+        make
+        make install
+        cd ../..
+
+        python -m pip install --upgrade setuptools wheel pip
+        pip install -r requirements.txt
+        python setup.py bdist_wheel
+    - name: Upload Wheels
+      uses: actions/upload-artifact@v1
+      with: 
+        name: osx-wheels
+        path: dist
+    - name: Check wheels
+      shell: bash
+      run: |
+        ls -la
+        VERSION=$(python setup.py --version)
+        pip install "dist/fugashi-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-osx.whl"
