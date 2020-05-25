@@ -4,10 +4,8 @@ on:
   push:
     branches:
       - master
-      - osx-wheels
 
 jobs:
-
   build:
     runs-on: macos-latest
     strategy:
