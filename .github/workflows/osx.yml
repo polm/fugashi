@@ -29,6 +29,11 @@ jobs:
             py-short2: 38
     steps:
     - uses: actions/checkout@v1
+    - name: Setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        architecture: x64
     - name: Download and build MeCab
       shell: bash
       run: |
