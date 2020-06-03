@@ -82,3 +82,8 @@ are some cases where it might be better to use a different library.
 - If you don't want to deal with installing MeCab at all, try [SudachiPy](https://github.com/WorksApplications/SudachiPy).
 - If you need to work with Korean, try [KoNLPy](https://konlpy.org/en/latest/).
 
+## Notice
+
+MeCab is copyrighted free software by Taku Kudo <taku@chasen.org> and
+Nippon Telegraph and Telephone Corporation, and is redistributed
+under the [BSD License](./LICENSE.mecab).
