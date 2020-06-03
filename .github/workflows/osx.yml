@@ -2,6 +2,8 @@ name: Build OSX wheels
 
 on:
   push:
+    branches:
+      - master
 
 jobs:
   build:
