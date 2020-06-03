@@ -52,7 +52,7 @@ jobs:
         cd tmp
         unzip ../$path_to_wheel
         delocate-path -L fugashi.dylibs .
-        zip -r -D $path_to_wheel *
+        zip -r -D ../$path_to_wheel *
         cd -
         rm -rf tmp
         # Check libmecab.2.dylib is included
