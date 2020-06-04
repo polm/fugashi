@@ -6,7 +6,7 @@
 
 Fugashi is a Cython wrapper for [MeCab](https://taku910.github.io/mecab/), a
 Japanese tokenizer and morphological analysis tool.  Wheels are provided for
-Linux, OSX, and Win64, and UniDic is easy to install (see docs below).
+Linux, OSX, and Win64, and UniDic is [easy to install](#installing-a-dictionary).
 
 See the [blog post](https://www.dampfkraft.com/nlp/fugashi.html) for background
 on why Fugashi exists and some of the design decisions.
@@ -17,15 +17,17 @@ source](https://github.com/taku910/mecab).
 
 ## Usage
 
-    from fugashi import Tagger
+```python
+from fugashi import Tagger
 
-    tagger = Tagger('-Owakati')
-    text = "麩菓子（ふがし）は、麩を主材料とした日本の菓子。"
-    tagger.parse(text)
-    # => '麩 菓子 （ ふ が し ） は 、 麩 を 主材 料 と し た 日本 の 菓子 。'
-    for word in tagger(text):
-        print(word, word.feature.lemma, word.pos, sep='\t')
-        # "feature" is the Unidic feature data as a named tuple
+tagger = Tagger('-Owakati')
+text = "麩菓子は、麩を主材料とした日本の菓子。"
+tagger.parse(text)
+# => '麩 菓子 は 、 麩 を 主材 料 と し た 日本 の 菓子 。'
+for word in tagger(text):
+    print(word, word.feature.lemma, word.pos, sep='\t')
+    # "feature" is the Unidic feature data as a named tuple
+```
 
 ## Installing a Dictionary
 
@@ -43,11 +45,13 @@ documentation](https://taku910.github.io/mecab/learn.html).
 To get either of these dictionaries, you can install them directly using `pip`
 or do the below:
 
-    pip install fugashi[unidic-lite]
+```sh
+pip install fugashi[unidic-lite]
 
-    # The full version of UniDic requires a separate download step
-    pip install fugashi[unidic]
-    python -m unidic download
+# The full version of UniDic requires a separate download step
+pip install fugashi[unidic]
+python -m unidic download
+```
 
 ## Dictionary Use
 
@@ -56,22 +60,26 @@ but it supports arbitrary dictionaries.
 
 If you're using a dictionary besides Unidic you can use the GenericTagger like this:
 
-    from fugashi import GenericTagger
-    tagger = GenericTagger()
+```python
+from fugashi import GenericTagger
+tagger = GenericTagger()
 
-    # parse can be used as normal
-    tagger.parse('something')
-    # features from the dictionary can be accessed by field numbers
-    for word in tagger(text):
-        print(word.surface, word.feature[0])
+# parse can be used as normal
+tagger.parse('something')
+# features from the dictionary can be accessed by field numbers
+for word in tagger(text):
+    print(word.surface, word.feature[0])
+```
 
 You can also create a dictionary wrapper to get feature information as a named tuple. 
 
-    from fugashi import GenericTagger, create_feature_wrapper
-    CustomFeatures = create_feature_wrapper('CustomFeatures', 'alpha beta gamma')
-    tagger = GenericTagger(wrapper=CustomFeatures)
-    for word in tagger.parseToNodeList(text):
-        print(word.surface, word.feature.alpha)
+```python
+from fugashi import GenericTagger, create_feature_wrapper
+CustomFeatures = create_feature_wrapper('CustomFeatures', 'alpha beta gamma')
+tagger = GenericTagger(wrapper=CustomFeatures)
+for word in tagger.parseToNodeList(text):
+    print(word.surface, word.feature.alpha)
+```
 
 ## Alternatives
 
@@ -82,8 +90,12 @@ are some cases where it might be better to use a different library.
 - If you don't want to deal with installing MeCab at all, try [SudachiPy](https://github.com/WorksApplications/SudachiPy).
 - If you need to work with Korean, try [KoNLPy](https://konlpy.org/en/latest/).
 
-## Notice
+## License and Copyright Notice
 
-MeCab is copyrighted free software by Taku Kudo <taku@chasen.org> and
-Nippon Telegraph and Telephone Corporation, and is redistributed
-under the [BSD License](./LICENSE.mecab).
+Fugashi is released under the terms of the [MIT license](./LICENSE). Please
+copy it far and wide.
+
+Fugashi is a wrapper for MeCab, and Fugashi wheels include MeCab binaries.
+MeCab is copyrighted free software by Taku Kudo `<taku@chasen.org>` and Nippon
+Telegraph and Telephone Corporation, and is redistributed under the [BSD
+License](./LICENSE.mecab).
