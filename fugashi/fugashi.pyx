@@ -43,14 +43,12 @@ cdef class Node:
         pass
 
     def __repr__(self):
-        if self.stat == 0:
+        if self.stat == 0 or self.stat == 1:
             return self.surface
         elif self.stat == 2:
             return '<BOS>'
         elif self.stat == 3:
             return '<EOS>'
-        elif self.stat == 1:
-            return '<UNK>' + self.surface
         else:
             return self.surface
 
