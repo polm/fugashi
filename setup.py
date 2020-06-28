@@ -26,10 +26,10 @@ extensions = Extension('fugashi',
         extra_link_args=extra_link_args)
 
 setup(name='fugashi', 
-      version='0.2.3',
+      version='1.0.0',
       author="Paul O'Leary McCann",
       author_email="polm@dampfkraft.com",
-      description="A Cython wrapper for MeCab",
+      description="A Cython MeCab wrapper for fast, python Japanese tokenization.",
       long_description=pathlib.Path('README.md').read_text('utf8'),
       long_description_content_type="text/markdown",
       url="https://github.com/polm/fugashi",
