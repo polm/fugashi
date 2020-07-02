@@ -8,6 +8,8 @@ Fugashi is a Cython wrapper for [MeCab](https://taku910.github.io/mecab/), a
 Japanese tokenizer and morphological analysis tool.  Wheels are provided for
 Linux, OSX, and Win64, and UniDic is [easy to install](#installing-a-dictionary).
 
+**issueを英語で書く必要はありません。**
+
 See the [blog post](https://www.dampfkraft.com/nlp/fugashi.html) for background
 on why Fugashi exists and some of the design decisions.
 
