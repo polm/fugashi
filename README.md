@@ -88,7 +88,6 @@ for word in tagger.parseToNodeList(text):
 If you have a problem with Fugashi feel free to open an issue. However, there
 are some cases where it might be better to use a different library.
 
-- If you want to use MeCab on a platform we don't have wheels for, but don't have a C compiler, use [natto-py](https://github.com/buruzaemon/natto-py).
 - If you don't want to deal with installing MeCab at all, try [SudachiPy](https://github.com/WorksApplications/SudachiPy).
 - If you need to work with Korean, try [KoNLPy](https://konlpy.org/en/latest/).
 
