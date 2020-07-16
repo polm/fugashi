@@ -177,15 +177,8 @@ cdef str get_error_details(int argc, char** argv):
 
     Due to an upstream bug, errors in Tagger intialization don't give useful
     error output."""
-    try:
-        model = mecab_model_new(argc, argv)
-        return mecab_strerror(NULL).decode('utf-8')
-    except RuntimeError as err:
-        # get the MeCab error string
-        errstr = str(err)[len('RuntimeError: '):]
-        return errstr
-
-    return "No error, your args appear to work."
+    model = mecab_model_new(argc, argv)
+    return mecab_strerror(NULL).decode('utf-8')
 
 cdef void print_detailed_error(list args, int argc, char** argv):
     """Print guide to solving initialization errors."""
