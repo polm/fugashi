@@ -1,7 +1,6 @@
-name: Test in manylinux
+name: Test on Linux
 
-on:
-  push:
+on: [push]
 
 jobs:
   build:
@@ -9,14 +8,17 @@ jobs:
     strategy:
       matrix:
         python-version: [ 3.5, 3.6, 3.7, 3.8 ]
-    env:
-      PYTHON: python${{ matrix.python-version }}
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
     - name: Install test deps
       run: |
         python -m pip install --upgrade setuptools wheel pip
         pip install unidic-lite ipadic pytest
+        pip install .
     - name: Run tests
       run: |
         pytest 
