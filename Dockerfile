@@ -5,7 +5,4 @@ RUN git clone https://github.com/taku910/mecab.git && \
     cd mecab/mecab && \
     ./configure --enable-utf8-only && \
     make && \
-    make install && \
-    curl https://unidic.ninjal.ac.jp/unidic_archive/cwj/2.1.2/unidic-mecab-2.1.2_src.zip --output /tmp/unidic.zip && \
-    cd /tmp && unzip unidic.zip && cd unidic-mecab-2.1.2_src/ && ./configure && make && make install && \
-    sed -i -e "s/ipadic/unidic/g" /usr/local/etc/mecabrc
+    make install
