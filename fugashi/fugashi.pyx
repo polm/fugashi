@@ -219,7 +219,6 @@ cdef class GenericTagger:
         self.c_tagger = mecab_new(argc, argv)
         free(argv)
         if self.c_tagger == NULL:
-            print(mecab_strerror(self.c_tagger).decode('utf-8'))
             # In theory mecab_strerror should return an error string from MeCab
             # It doesn't seem to work and just returns b'' though, so this will
             # have to do.
