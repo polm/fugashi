@@ -13,6 +13,10 @@ jobs:
       PYTHON: python${{ matrix.python-version }}
     steps:
     - uses: actions/checkout@v1
-    - run: docker build -t fugashi .
-    - name: setup and test
-      run: docker run -v $(pwd):/workdir -w /workdir fugashi sh -c "$PYTHON -m pip install pytest wheel && $PYTHON -m pip install -e . && $PYTHON -m pytest"
+    - name: Install test deps
+      run: |
+        python -m pip install --upgrade setuptools wheel pip
+        pip install unidic-lite ipadic pytest
+    - name: Run tests
+      run: |
+        pytest 
