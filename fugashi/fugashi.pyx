@@ -101,7 +101,10 @@ cdef class Node:
             return ' ' * (self.rlength - self.length)
         
     cdef list pad_none(self, list fields):
-        d = len(self.wrapper._fields) - len(fields)
+        try:
+            d = len(self.wrapper._fields) - len(fields)
+        except AttributeError:
+            d = 0
         return fields + [None] * d
 
     cdef void set_feature(self, bytes feature):
