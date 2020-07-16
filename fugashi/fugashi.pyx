@@ -1,10 +1,13 @@
+#cython: language_level=3
 from mecab cimport (mecab_new, mecab_sparse_tostr2, mecab_t, mecab_node_t,
         mecab_sparse_tonode, mecab_nbest_sparse_tostr, 
-        mecab_dictionary_info_t, mecab_dictionary_info)
+        mecab_dictionary_info_t, mecab_dictionary_info,
+        mecab_model_new, mecab_strerror)
 from collections import namedtuple
 import os
 import csv
 import shlex
+import sys
 from libc.stdlib cimport malloc, free
 
 # field names can be found in the dicrc file distributed with Unidic or here:
@@ -155,22 +158,43 @@ def make_tuple(*args):
     """
     return tuple(args)
 
+FAILMESSAGE = """
+Failed initializing MeCab. Please see the README for possible solutions:
 
-TAGGER_FAILURE = """
-Failed to initialize the Tagger. Typically this means a dictionary could not be
-found. Things to check:
+    https://github.com/polm/fugashi
 
-- Are your Tagger arguments correct?
+If you are still having trouble, please file an issue here, and include the
+ERROR DETAILS below:
 
-- Have you installed the MeCab C++ program?
+    https://github.com/polm/fugashi/issues
 
-- Have you installed UniDic or another dictionary? Currently fugashi requires
-  you to install a dictionary, and UniDic is strongly recommended.
+issueを英語で書く必要はありません。
 
-Instructions for installing MeCab and Unidic:
+------------------- ERROR DETAILS ------------------------"""
 
-    https://www.dampfkraft.com/nlp/japanese-spacy-and-mecab.html
-"""
+cdef str get_error_details(int argc, char** argv):
+    """Instantiate a Model to get output from MeCab.
+
+    Due to an upstream bug, errors in Tagger intialization don't give useful
+    error output."""
+    try:
+        model = mecab_model_new(argc, argv)
+        return mecab_strerror(NULL).decode('utf-8')
+    except RuntimeError as err:
+        # get the MeCab error string
+        errstr = str(err)[len('RuntimeError: '):]
+        return errstr
+
+    return "No error, your args appear to work."
+
+cdef void print_detailed_error(list args, int argc, char** argv):
+    """Print guide to solving initialization errors."""
+    print(FAILMESSAGE, file=sys.stderr)
+    print('arguments:', args, file=sys.stderr)
+
+    message = get_error_details(argc, argv)
+    print('error message:', message, file=sys.stderr)
+    print('----------------------------------------------------------')
 
 cdef class GenericTagger:
     """Generic Tagger, supports any dictionary.
@@ -195,10 +219,12 @@ cdef class GenericTagger:
         self.c_tagger = mecab_new(argc, argv)
         free(argv)
         if self.c_tagger == NULL:
+            print(mecab_strerror(self.c_tagger).decode('utf-8'))
             # In theory mecab_strerror should return an error string from MeCab
             # It doesn't seem to work and just returns b'' though, so this will
             # have to do.
-            raise RuntimeError(TAGGER_FAILURE)
+            print_detailed_error(args, argc, argv)
+            sys.exit(1)
         self.wrapper = wrapper
 
     def __call__(self, text):
