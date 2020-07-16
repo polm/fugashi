@@ -7,13 +7,13 @@ Like the mecab binary, it treats each line of stdin as one sentence. You can
 pass tagger arguments here too.
 """
 
-from fugashi import Tagger
+from fugashi import GenericTagger
 import sys
 import fileinput
 
 def parse(args=''):
     """Parse input from stdin."""
-    tagger = Tagger(args)
+    tagger = GenericTagger(args)
 
     for line in fileinput.input([]):
         print(tagger.parse(line.strip()))
