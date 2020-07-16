@@ -210,13 +210,14 @@ cdef class GenericTagger:
             argv[ii] = arg
 
         self.c_tagger = mecab_new(argc, argv)
-        free(argv)
         if self.c_tagger == NULL:
             # In theory mecab_strerror should return an error string from MeCab
             # It doesn't seem to work and just returns b'' though, so this will
             # have to do.
             print_detailed_error(args, argc, argv)
-            sys.exit(1)
+            free(argv)
+            raise RuntimeError("Failed initializing MeCab")
+        free(argv)
         self.wrapper = wrapper
 
     def __call__(self, text):
