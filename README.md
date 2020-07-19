@@ -1,5 +1,5 @@
 [![Current PyPI packages](https://badge.fury.io/py/fugashi.svg)](https://pypi.org/project/fugashi/)
-![Test Status](https://github.com/polm/fugashi/workflows/test_manylinux/badge.svg)
+![Test Status](https://github.com/polm/fugashi/workflows/test-manylinux/badge.svg)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/fugashi)](https://pypi.org/project/fugashi/)
 ![Supported Platforms](https://img.shields.io/badge/platforms-linux%20macosx%20windows-blue)
 
