@@ -6,12 +6,15 @@ This is a script to print out fugashi's dictionary info. It's useful for
 debugging and checking your configuration.
 """
 
-from fugashi import GenericTagger
+from fugashi import GenericTagger, Tagger
 import sys
 
 def info(args=''):
     """Print configuration info."""
-    tagger = GenericTagger(args)
+    try:
+        tagger = GenericTagger(args, quiet=True)
+    except RuntimeError:
+        tagger = Tagger(args)
     #TODO get the fugashi version here too
     print("Fugashi dictionary info:")
     print("-----")

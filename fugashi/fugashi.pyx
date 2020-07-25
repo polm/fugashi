@@ -200,7 +200,7 @@ cdef class GenericTagger:
     cdef mecab_t* c_tagger
     cdef object wrapper
 
-    def __init__(self, args='', wrapper=make_tuple):
+    def __init__(self, args='', wrapper=make_tuple, quiet=False):
         # The first argument is ignored because in the MeCab binary the argc
         # and argv for the process are used here.
         args = [b'fugashi', b'-C'] + [bytes(arg, 'utf-8') for arg in shlex.split(args)]
@@ -214,7 +214,8 @@ cdef class GenericTagger:
             # In theory mecab_strerror should return an error string from MeCab
             # It doesn't seem to work and just returns b'' though, so this will
             # have to do.
-            print_detailed_error(args, argc, argv)
+            if not quiet:
+                print_detailed_error(args, argc, argv)
             free(argv)
             raise RuntimeError("Failed initializing MeCab")
         free(argv)
