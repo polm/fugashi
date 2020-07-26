@@ -68,6 +68,8 @@ jobs:
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      shell: bash
       run: |
+        pip install twine
         twine upload dist/fugashi*
 

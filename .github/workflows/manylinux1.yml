@@ -4,6 +4,7 @@ on:
   push:
     branches: 
       - master
+  create:
 
 jobs:
   deploy:
@@ -23,5 +24,6 @@ jobs:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
+        pip install twine
         twine upload dist/fugashi*
 
