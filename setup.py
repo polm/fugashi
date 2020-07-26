@@ -26,7 +26,6 @@ extensions = Extension('fugashi',
         extra_link_args=extra_link_args)
 
 setup(name='fugashi', 
-      version='1.0.1',
       use_scm_version=True,
       author="Paul O'Leary McCann",
       author_email="polm@dampfkraft.com",
