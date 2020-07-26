@@ -8,7 +8,7 @@ on:
 
 
 jobs:
-  build:
+  build_windows:
     runs-on: windows-latest
     strategy:
       max-parallel: 4

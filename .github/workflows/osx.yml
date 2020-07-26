@@ -7,7 +7,7 @@ on:
   create:
 
 jobs:
-  build:
+  build_osx:
     runs-on: macos-latest
     strategy:
       max-parallel: 4
