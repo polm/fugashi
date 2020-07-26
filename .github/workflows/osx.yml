@@ -70,3 +70,9 @@ jobs:
         ls -la dist
         VERSION=$(python setup.py --version)
         pip install dist/fugashi-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-macosx*.whl
+    - name: Publish to PyPI if tagged
+      if: startsWith(github.ref, 'refs/tags')
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        password: ${{ secrets.pypi_key }}
+
