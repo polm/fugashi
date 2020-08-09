@@ -41,7 +41,11 @@ setup(name='fugashi',
       python_requires='>=3.5',
       ext_modules=[extensions],
       data_files=data_files,
-      scripts=['bin/fugashi', 'bin/fugashi-info'],
+      entry_points={
+          'console_scripts': [
+              'fugashi = fugashi_cli.cli:main',
+              'fugashi-info = fugashi_cli.cli:info',
+      ]},
       extras_require={
           'unidic': ['unidic'],
           'unidic-lite': ['unidic-lite'],
