@@ -17,7 +17,7 @@ libraries = mecab_config[2].split()
 extra_objects = mecab_config[3].split()
 extra_link_args = mecab_config[4].split()
 
-extensions = Extension('fugashi', 
+extensions = Extension('fugashi.fugashi', 
         ['fugashi/fugashi.pyx'], 
         libraries=libraries,
         library_dirs=library_dirs,
@@ -43,8 +43,8 @@ setup(name='fugashi',
       data_files=data_files,
       entry_points={
           'console_scripts': [
-              'fugashi = fugashi_cli.cli:main',
-              'fugashi-info = fugashi_cli.cli:info',
+              'fugashi = fugashi.cli:main',
+              'fugashi-info = fugashi.cli:info',
       ]},
       extras_require={
           'unidic': ['unidic'],
