@@ -34,7 +34,6 @@ setup(name='fugashi',
       long_description_content_type="text/markdown",
       url="https://github.com/polm/fugashi",
       packages=setuptools.find_packages(),
-      install_requires=['Cython'],
       classifiers=[
           "License :: OSI Approved :: MIT License",
           "Natural Language :: Japanese",
