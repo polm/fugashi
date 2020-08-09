@@ -1,5 +1,5 @@
 #cython: language_level=3
-from mecab cimport (mecab_new, mecab_sparse_tostr2, mecab_t, mecab_node_t,
+from fugashi.mecab cimport (mecab_new, mecab_sparse_tostr2, mecab_t, mecab_node_t,
         mecab_sparse_tonode, mecab_nbest_sparse_tostr, 
         mecab_dictionary_info_t, mecab_dictionary_info,
         mecab_model_new, mecab_strerror)
