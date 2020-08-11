@@ -18,7 +18,7 @@ def mecab_config_windows():
     win_mecab_dir = r'C:\mecab'
     win_bin_dir = win_mecab_dir # this is separate from the sdk dir on some installs
     mecab_details = (win_mecab_dir, win_mecab_dir, 'libmecab')
-    data_files = [("lib\\site-packages\\", ["{}\\libmecab.dll".format(win_bin_dir)])]
+    data_files = [("lib\\site-packages\\fugashi\\", ["{}\\libmecab.dll".format(win_bin_dir)])]
     return mecab_details, data_files
 
 def mecab_config_cygwin():
