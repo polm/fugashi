@@ -14,7 +14,10 @@ Linux, OSX, and Win64, and UniDic is [easy to install](#installing-a-dictionary)
 **issueを英語で書く必要はありません。**
 
 See the [blog post](https://www.dampfkraft.com/nlp/fugashi.html) for background
-on why Fugashi exists and some of the design decisions.
+on why Fugashi exists and some of the design decisions, or see [this
+guide][guide] for a basic introduction to Japanese tokenization.
+
+[guide]: https://www.dampfkraft.com/nlp/how-to-tokenize-japanese.html
 
 If you are on an unsupported platform (like PowerPC), you'll need to install
 MeCab first. It's recommended you install [from
