@@ -31,7 +31,7 @@ jobs:
             py-short2: 39
     steps:
     - uses: actions/checkout@v1
-    - name: Setup python
+    - name: Set up python
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
