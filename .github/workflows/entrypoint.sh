@@ -13,6 +13,11 @@ cd mecab/mecab
 make
 make install
 
+# Hack
+# see here:
+# https://github.com/RalfG/python-wheels-manylinux-build/issues/26
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
+
 # Build the wheels
 for PYVER in cp35-cp35m cp36-cp36m cp37-cp37m cp38-cp38 cp39-cp39; do
   # install cython first
