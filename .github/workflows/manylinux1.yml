@@ -9,19 +9,53 @@ on:
 jobs:
   build_linux:
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
+      matrix:
+        python-version: [3.5, 3.6, 3.7, 3.8, 3.9]
+        include:
+          - python-version: 3.5
+            py-short: 35
+            py-short2: 35m
+          - python-version: 3.6
+            py-short: 36
+            py-short2: 36m
+          - python-version: 3.7
+            py-short: 37
+            py-short2: 37m
+          - python-version: 3.8
+            py-short: 38
+            py-short2: 38
+          - python-version: 3.9
+            py-short: 39
+            py-short2: 39
+
     steps:
     - uses: actions/checkout@v1
-    - name: Build manylinux Python wheels
-      uses: polm/mecab-manylinux1-wheel-builder@v0.1.4
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install MeCab and build wheels
+      shell: bash
+      run: |
+        git clone --depth=1 https://github.com/taku910/mecab.git
+        cd mecab/mecab
+        ./configure --enable-utf8-only
+        make
+        make install
+        cd ../..
+
+        python -m pip install --upgrade setuptools wheel pip setuptools-scm cython
+        python setup.py bdist_wheel
+
+        auditwheel repair "$wheel" --plat manylinux1_x86_64 -w dist/fugashi*whl
+        ls
     - name: Upload Wheels
       uses: actions/upload-artifact@v1
       with: 
         name: manylinux1-wheels
-        path: manylinux1-wheels
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: ['3.x', '3.9']
+        path: dist
     - name: Publish to PyPI if tagged
       if: startsWith(github.ref, 'refs/tags')
       env:
@@ -31,6 +65,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install twine setuptools-scm
         python setup.py sdist
-        twine upload manylinux1-wheels/fugashi*
+        twine upload dist/fugashi*whl
         twine upload dist/fugashi*.tar.gz
 
