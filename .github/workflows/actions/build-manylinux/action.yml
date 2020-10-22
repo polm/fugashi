@@ -3,4 +3,4 @@ runs:
     using: 'docker'
     image: docker://quay.io/pypa/manylinux1_x86_64 
     args:
-        - .github/workflows/actions/entrypoint.sh
+        - .github/workflows/entrypoint.sh
