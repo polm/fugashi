@@ -3,7 +3,7 @@
 set -e
 
 # prereqs
-yum install libcurl3
+yum install curl-devel
 
 # install MeCab
 # TODO specify the commit used here
