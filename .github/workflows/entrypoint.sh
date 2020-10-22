@@ -2,6 +2,9 @@
 # Install mecab, then build wheels
 set -e
 
+# prereqs
+apt-get install libcurl3
+
 # install MeCab
 # TODO specify the commit used here
 git clone --depth=1 https://github.com/taku910/mecab.git
