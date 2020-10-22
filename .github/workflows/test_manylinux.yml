@@ -13,10 +13,6 @@ jobs:
       PYTHON: python${{ matrix.python-version }}
     steps:
     - uses: actions/checkout@v1
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
     - run: docker build -t fugashi .
     - name: setup and test
       run: docker run -v $(pwd):/workdir -w /workdir fugashi sh -c "$PYTHON -m pip install cython pytest wheel unidic-lite ipadic && $PYTHON -m pip install -e . && $PYTHON -m pytest"
