@@ -63,7 +63,7 @@ python -m unidic download
 
 ## Dictionary Use
 
-Fugashi is written with the assumption you'll use Unidic to process Japanese,
+fugashi is written with the assumption you'll use Unidic to process Japanese,
 but it supports arbitrary dictionaries. 
 
 If you're using a dictionary besides Unidic you can use the GenericTagger like this:
@@ -88,6 +88,18 @@ tagger = GenericTagger(wrapper=CustomFeatures)
 for word in tagger.parseToNodeList(text):
     print(word.surface, word.feature.alpha)
 ```
+
+## Citation
+
+If you use fugashi in research, it would be appreciated if you cite this paper. You can read it [on Arxiv](https://arxiv.org/abs/2010.06858).
+
+    @article{McCann2020fugashiAT,
+      title={fugashi, a Tool for Tokenizing Japanese in Python},
+      author={Paul O'Leary McCann},
+      journal={ArXiv},
+      year={2020},
+      volume={abs/2010.06858}
+    }
 
 ## Alternatives
 
