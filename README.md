@@ -91,14 +91,19 @@ for word in tagger.parseToNodeList(text):
 
 ## Citation
 
-If you use fugashi in research, it would be appreciated if you cite this paper. You can read it [on Arxiv](https://arxiv.org/abs/2010.06858).
+If you use fugashi in research, it would be appreciated if you cite this paper. You can read it at [the ACL Anthology](https://www.aclweb.org/anthology/2020.nlposs-1.7/) or [on Arxiv](https://arxiv.org/abs/2010.06858).
 
-    @article{McCann2020fugashiAT,
-      title={fugashi, a Tool for Tokenizing Japanese in Python},
-      author={Paul O'Leary McCann},
-      journal={ArXiv},
-      year={2020},
-      volume={abs/2010.06858}
+    @inproceedings{mccann-2020-fugashi,
+        title = "fugashi, a Tool for Tokenizing {J}apanese in Python",
+        author = "McCann, Paul",
+        booktitle = "Proceedings of Second Workshop for NLP Open Source Software (NLP-OSS)",
+        month = nov,
+        year = "2020",
+        address = "Online",
+        publisher = "Association for Computational Linguistics",
+        url = "https://www.aclweb.org/anthology/2020.nlposs-1.7",
+        pages = "44--51",
+        abstract = "Recent years have seen an increase in the number of large-scale multilingual NLP projects. However, even in such projects, languages with special processing requirements are often excluded. One such language is Japanese. Japanese is written without spaces, tokenization is non-trivial, and while high quality open source tokenizers exist they can be hard to use and lack English documentation. This paper introduces fugashi, a MeCab wrapper for Python, and gives an introduction to tokenizing Japanese.",
     }
 
 ## Alternatives
