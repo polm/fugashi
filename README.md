@@ -61,6 +61,8 @@ pip install fugashi[unidic]
 python -m unidic download
 ```
 
+For more information on the different MeCab dictionaries available, see [this article](https://www.dampfkraft.com/nlp/japanese-tokenizer-dictionaries.html).
+
 ## Dictionary Use
 
 fugashi is written with the assumption you'll use Unidic to process Japanese,
