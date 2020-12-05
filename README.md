@@ -1,3 +1,4 @@
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/polm/fugashi-streamlit-demo/main/demo.py)
 [![Current PyPI packages](https://badge.fury.io/py/fugashi.svg)](https://pypi.org/project/fugashi/)
 ![Test Status](https://github.com/polm/fugashi/workflows/test-manylinux/badge.svg)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/fugashi)](https://pypi.org/project/fugashi/)
@@ -13,11 +14,12 @@ Linux, OSX, and Win64, and UniDic is [easy to install](#installing-a-dictionary)
 
 **issueを英語で書く必要はありません。**
 
-See the [blog post](https://www.dampfkraft.com/nlp/fugashi.html) for background
+Check out the [interactive demo][], see the [blog post](https://www.dampfkraft.com/nlp/fugashi.html) for background
 on why Fugashi exists and some of the design decisions, or see [this
 guide][guide] for a basic introduction to Japanese tokenization.
 
 [guide]: https://www.dampfkraft.com/nlp/how-to-tokenize-japanese.html
+[interactive demo]: https://share.streamlit.io/polm/fugashi-streamlit-demo/main/demo.py
 
 If you are on an unsupported platform (like PowerPC), you'll need to install
 MeCab first. It's recommended you install [from
