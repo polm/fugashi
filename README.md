@@ -6,16 +6,16 @@
 
 # fugashi
 
-<img src="https://github.com/polm/fugashi/raw/master/fugashi.png" width=125 height=125 alt="Fugashi by Irasutoya" />
+<img src="https://github.com/polm/fugashi/raw/master/fugashi.png" width=125 height=125 alt="fugashi by Irasutoya" />
 
-Fugashi is a Cython wrapper for [MeCab](https://taku910.github.io/mecab/), a
+fugashi is a Cython wrapper for [MeCab](https://taku910.github.io/mecab/), a
 Japanese tokenizer and morphological analysis tool.  Wheels are provided for
 Linux, OSX, and Win64, and UniDic is [easy to install](#installing-a-dictionary).
 
 **issueを英語で書く必要はありません。**
 
 Check out the [interactive demo][], see the [blog post](https://www.dampfkraft.com/nlp/fugashi.html) for background
-on why Fugashi exists and some of the design decisions, or see [this
+on why fugashi exists and some of the design decisions, or see [this
 guide][guide] for a basic introduction to Japanese tokenization.
 
 [guide]: https://www.dampfkraft.com/nlp/how-to-tokenize-japanese.html
@@ -41,7 +41,7 @@ for word in tagger(text):
 
 ## Installing a Dictionary
 
-Fugashi requires a dictionary. [UniDic](https://unidic.ninjal.ac.jp/) is
+fugashi requires a dictionary. [UniDic](https://unidic.ninjal.ac.jp/) is
 recommended, and two easy-to-install versions are provided.
 
   - [unidic-lite](https://github.com/polm/unidic-lite), a 2013 version of Unidic that's relatively small
@@ -112,7 +112,7 @@ If you use fugashi in research, it would be appreciated if you cite this paper. 
 
 ## Alternatives
 
-If you have a problem with Fugashi feel free to open an issue. However, there
+If you have a problem with fugashi feel free to open an issue. However, there
 are some cases where it might be better to use a different library.
 
 - If you don't want to deal with installing MeCab at all, try [SudachiPy](https://github.com/WorksApplications/SudachiPy).
@@ -120,10 +120,10 @@ are some cases where it might be better to use a different library.
 
 ## License and Copyright Notice
 
-Fugashi is released under the terms of the [MIT license](./LICENSE). Please
+fugashi is released under the terms of the [MIT license](./LICENSE). Please
 copy it far and wide.
 
-Fugashi is a wrapper for MeCab, and Fugashi wheels include MeCab binaries.
+fugashi is a wrapper for MeCab, and fugashi wheels include MeCab binaries.
 MeCab is copyrighted free software by Taku Kudo `<taku@chasen.org>` and Nippon
 Telegraph and Telephone Corporation, and is redistributed under the [BSD
 License](./LICENSE.mecab).
