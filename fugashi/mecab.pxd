@@ -33,3 +33,5 @@ cdef extern from "mecab.h":
     cdef char* mecab_nbest_sparse_tostr(mecab_t *mecab, size_t N, const char *str)
     cdef int mecab_nbest_init(mecab_t *mecab, const char *str) 
     cdef const char* mecab_strerror(mecab_t *mecab)
+
+    cdef int mecab_dict_index(int argc, char**argv)

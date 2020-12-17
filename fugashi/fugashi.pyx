@@ -2,7 +2,7 @@
 from fugashi.mecab cimport (mecab_new, mecab_sparse_tostr2, mecab_t, mecab_node_t,
         mecab_sparse_tonode, mecab_nbest_sparse_tostr, 
         mecab_dictionary_info_t, mecab_dictionary_info,
-        mecab_model_new, mecab_strerror)
+        mecab_model_new, mecab_strerror, mecab_dict_index)
 from collections import namedtuple
 import os
 import csv
@@ -337,3 +337,13 @@ def create_feature_wrapper(name, fields, default=None):
     support new dictionaries.
     """
     return namedtuple(name, fields, defaults=(None,) * len(fields))
+
+def build_dictionary(args):
+    args = [bytes(arg, 'utf-8') for arg in shlex.split(args)]
+    cdef int argc = len(args)
+    cdef char** argv = <char**>malloc(argc * sizeof(char*))
+    for ii, arg in enumerate(args):
+        argv[ii] = arg
+    out = mecab_dict_index(argc, argv)
+    free(argv)
+

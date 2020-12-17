@@ -1,4 +1,4 @@
-from fugashi import GenericTagger, Tagger
+from fugashi import GenericTagger, Tagger, build_dictionary
 import sys
 import fileinput
 
@@ -36,4 +36,6 @@ def info():
             print( (field + ':').ljust(10), di[field])
         print('-----')
 
-
+def build_dict():
+    args = ' '.join(sys.argv)
+    build_dictionary(args)

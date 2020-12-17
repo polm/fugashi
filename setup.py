@@ -45,6 +45,7 @@ setup(name='fugashi',
           'console_scripts': [
               'fugashi = fugashi.cli:main',
               'fugashi-info = fugashi.cli:info',
+              'fugashi-build-dict = fugashi.cli:build_dict',
       ]},
       extras_require={
           'unidic': ['unidic'],
