@@ -1,7 +1,7 @@
 import pathlib
 import setuptools
 import subprocess
-from distutils.core import setup
+from setuptools import setup
 from distutils.extension import Extension
 
 from fugashi_util import check_libmecab
