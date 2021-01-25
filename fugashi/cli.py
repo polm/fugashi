@@ -37,5 +37,10 @@ def info():
         print('-----')
 
 def build_dict():
-    args = ' '.join(sys.argv)
+    """EXPERIMENTAL A wrapper for MeCab's user dictionary building command.
+    
+    This also defaults to utf8.
+    """
+    # TODO simplify using pip-installed dictionaries as base
+    args = "-f utf8 -t utf8 " + ' '.join(sys.argv)
     build_dictionary(args)
