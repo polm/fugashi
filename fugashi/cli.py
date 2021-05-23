@@ -42,5 +42,6 @@ def build_dict():
     This also defaults to utf8.
     """
     # TODO simplify using pip-installed dictionaries as base
-    args = "-f utf8 -t utf8 " + ' '.join(sys.argv)
+    args = sys.argv[0] + " -f utf8 -t utf8 " + ' '.join(sys.argv[1:])
+    print(args)
     build_dictionary(args)
