@@ -273,7 +273,6 @@ cdef class GenericTagger:
         # Node that on the command line this behavior is different, and each
         # line is treated as a sentence.
 
-        #TODO try moving this loop into cython space
         out = []
         cdef int offset = 0
         while node.next:
