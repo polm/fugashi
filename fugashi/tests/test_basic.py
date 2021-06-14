@@ -69,3 +69,10 @@ def test_accent(text, accent):
     accent_ = [tok.feature.aType for tok in tokens]
     assert accent_ == accent
 
+def test_clobber():
+    # Check that memory isn't clobbered by repeated parse calls
+    tagger = Tagger()
+    nodes1 = tagger("a b c d")
+    nodes2 = tagger("x y z !")
+
+    assert "a b c d".split() == [nn.surface for nn in nodes1]
