@@ -32,29 +32,6 @@ UnidicFeatures29 = namedtuple('UnidicFeatures29', 'pos1 pos2 pos3 pos4 cType '
         'fForm iConType fConType type kana kanaBase form formBase aType aConType '
         'aModType lid lemma_id'.split(' '))
 
-cdef class SliceNode:
-    cdef const mecab_node_t* c_node
-    cdef const unsigned char[:] _surface
-    cdef object features
-    cdef object wrapper
-
-    def __init__(self):
-        pass
-
-    @property
-    def surface(self):
-        return self._surface
-
-    @staticmethod
-    cdef SliceNode wrap(const mecab_node_t* c_node, object wrapper, const unsigned char[:] _surface):
-        cdef SliceNode node = SliceNode.__new__(SliceNode)
-        node.c_node = c_node
-        node.wrapper = wrapper
-        node._surface = _surface
-
-        return node
-
-
 cdef class Node:
     """Generic Nodes are modeled after the data returned from MeCab.
 
@@ -311,20 +288,6 @@ cdef class GenericTagger:
 
         #TODO maybe add an option to this function that just pings surface on 
         # everything here for eager evaluation
-
-    def parseToSliceList(self, text):
-        cstr = bytes(text, 'utf-8')
-        cdef const mecab_node_t* node = mecab_sparse_tonode(self.c_tagger, cstr)
-        cdef const unsigned char[:] mv = memoryview(cstr)
-        out = []
-        idx = 0
-        while node.next:
-            node = node.next
-            if node.stat == 3: # eos node
-                return out
-            surface = mv[idx:idx + node.length]
-            idx += node.length
-            out.append(SliceNode.wrap(node, None, surface))
 
     def nbest(self, text, num=10):
         cstr = bytes(text, 'utf-8')
