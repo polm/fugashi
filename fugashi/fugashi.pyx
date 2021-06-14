@@ -38,8 +38,6 @@ cdef class Node:
     Some data is in a strict format using enums, but most useful data is in the
     feature string, which is an untokenized CSV string."""
     cdef const mecab_node_t* c_node
-    cdef bytes __cstr
-    cdef int __offset
     cdef str _surface
     cdef object features
     cdef object wrapper
@@ -57,31 +55,20 @@ cdef class Node:
         else:
             return self.surface
 
-    @property
-    def _cstr(self):
-        return self.__cstr
-
-    @_cstr.setter
-    def _cstr(self, cstr):
-        self.__cstr = cstr
-
-    @property
-    def _offset(self):
-        return self.__offset
-
-    @_offset.setter
-    def _offset(self, offset):
-        self.__offset = offset
-
 
     @property
     def surface(self):
         if self._surface is None:
             #self._surface = self.c_node.surface[:self.c_node.length].decode('utf-8')
             #base = self._offset + (self.c_node.rlength - self.c_node.length)
-            end = self._offset + self.c_node.rlength
-            self._surface = self.__cstr[end - self.c_node.length:end].decode('utf-8')
+            #end = self._offset + self.c_node.rlength
+            #self._surface = self.__cstr[end - self.c_node.length:end].decode('utf-8')
+            pass
         return self._surface
+
+    @surface.setter
+    def surface(self, ss):
+        self._surface = ss
     
     @property
     def feature(self):
@@ -221,6 +208,7 @@ cdef class GenericTagger:
 
     cdef mecab_t* c_tagger
     cdef object wrapper
+    cdef dict _cache
 
     def __init__(self, args='', wrapper=make_tuple, quiet=False):
         # The first argument is ignored because in the MeCab binary the argc
@@ -242,6 +230,7 @@ cdef class GenericTagger:
             raise RuntimeError("Failed initializing MeCab")
         free(argv)
         self.wrapper = wrapper
+        self._cache = {}
 
     def __call__(self, text):
         """Wrapper for parseToNodeList."""
@@ -262,8 +251,7 @@ cdef class GenericTagger:
     def parseToNodeList(self, text):
         # cstr = bytes(text, 'utf-8')
         bstr = bytes(text, 'utf-8')
-        cdef char* cstr = bstr
-        cdef const mecab_node_t* node = mecab_sparse_tonode(self.c_tagger, cstr)
+        cdef const mecab_node_t* node = mecab_sparse_tonode(self.c_tagger, bstr)
 
         # A nodelist always contains one each of BOS and EOS (beginning/end of
         # sentence) nodes. Since they have no information on them and MeCab
@@ -274,15 +262,19 @@ cdef class GenericTagger:
         # line is treated as a sentence.
 
         out = []
-        cdef int offset = 0
         while node.next:
             node = node.next
             if node.stat == 3: # eos node
                 return out
             nn = self.wrap(node)
-            nn._cstr = bstr
-            nn._offset = offset
-            offset += node.rlength
+
+            # avoid new string allocations
+            #TODO try lru cache instead of intern (reason: good to age stuff out)
+            surf = node.surface[:node.length]
+            shash = hash(surf)
+            if shash not in self._cache:
+                self._cache[shash] = sys.intern(surf.decode("utf-8"))
+            nn.surface = self._cache[shash]
             out.append(nn)
 
         #TODO maybe add an option to this function that just pings surface on 
