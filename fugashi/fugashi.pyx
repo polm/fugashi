@@ -32,12 +32,37 @@ UnidicFeatures29 = namedtuple('UnidicFeatures29', 'pos1 pos2 pos3 pos4 cType '
         'fForm iConType fConType type kana kanaBase form formBase aType aConType '
         'aModType lid lemma_id'.split(' '))
 
+cdef class SliceNode:
+    cdef const mecab_node_t* c_node
+    cdef const unsigned char[:] _surface
+    cdef object features
+    cdef object wrapper
+
+    def __init__(self):
+        pass
+
+    @property
+    def surface(self):
+        return self._surface
+
+    @staticmethod
+    cdef SliceNode wrap(const mecab_node_t* c_node, object wrapper, const unsigned char[:] _surface):
+        cdef SliceNode node = SliceNode.__new__(SliceNode)
+        node.c_node = c_node
+        node.wrapper = wrapper
+        node._surface = _surface
+
+        return node
+
+
 cdef class Node:
     """Generic Nodes are modeled after the data returned from MeCab.
 
     Some data is in a strict format using enums, but most useful data is in the
     feature string, which is an untokenized CSV string."""
     cdef const mecab_node_t* c_node
+    cdef bytes __cstr
+    cdef int __offset
     cdef str _surface
     cdef object features
     cdef object wrapper
@@ -56,9 +81,29 @@ cdef class Node:
             return self.surface
 
     @property
+    def _cstr(self):
+        return self.__cstr
+
+    @_cstr.setter
+    def _cstr(self, cstr):
+        self.__cstr = cstr
+
+    @property
+    def _offset(self):
+        return self.__offset
+
+    @_offset.setter
+    def _offset(self, offset):
+        self.__offset = offset
+
+
+    @property
     def surface(self):
         if self._surface is None:
-            self._surface = self.c_node.surface[:self.c_node.length].decode('utf-8')
+            #self._surface = self.c_node.surface[:self.c_node.length].decode('utf-8')
+            #base = self._offset + (self.c_node.rlength - self.c_node.length)
+            end = self._offset + self.c_node.rlength
+            self._surface = self.__cstr[end - self.c_node.length:end].decode('utf-8')
         return self._surface
     
     @property
@@ -238,7 +283,9 @@ cdef class GenericTagger:
         return Node.wrap(node, self.wrapper)
 
     def parseToNodeList(self, text):
-        cstr = bytes(text, 'utf-8')
+        # cstr = bytes(text, 'utf-8')
+        bstr = bytes(text, 'utf-8')
+        cdef char* cstr = bstr
         cdef const mecab_node_t* node = mecab_sparse_tonode(self.c_tagger, cstr)
 
         # A nodelist always contains one each of BOS and EOS (beginning/end of
@@ -248,12 +295,36 @@ cdef class GenericTagger:
 
         # Node that on the command line this behavior is different, and each
         # line is treated as a sentence.
+
+        #TODO try moving this loop into cython space
         out = []
+        cdef int offset = 0
         while node.next:
             node = node.next
             if node.stat == 3: # eos node
                 return out
-            out.append(self.wrap(node))
+            nn = self.wrap(node)
+            nn._cstr = bstr
+            nn._offset = offset
+            offset += node.rlength
+            out.append(nn)
+
+        #TODO maybe add an option to this function that just pings surface on 
+        # everything here for eager evaluation
+
+    def parseToSliceList(self, text):
+        cstr = bytes(text, 'utf-8')
+        cdef const mecab_node_t* node = mecab_sparse_tonode(self.c_tagger, cstr)
+        cdef const unsigned char[:] mv = memoryview(cstr)
+        out = []
+        idx = 0
+        while node.next:
+            node = node.next
+            if node.stat == 3: # eos node
+                return out
+            surface = mv[idx:idx + node.length]
+            idx += node.length
+            out.append(SliceNode.wrap(node, None, surface))
 
     def nbest(self, text, num=10):
         cstr = bytes(text, 'utf-8')
