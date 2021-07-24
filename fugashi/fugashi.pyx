@@ -55,11 +55,20 @@ cdef class Node:
         else:
             return self.surface
 
+
     @property
     def surface(self):
         if self._surface is None:
-            self._surface = self.c_node.surface[:self.c_node.length].decode('utf-8')
+            #self._surface = self.c_node.surface[:self.c_node.length].decode('utf-8')
+            #base = self._offset + (self.c_node.rlength - self.c_node.length)
+            #end = self._offset + self.c_node.rlength
+            #self._surface = self.__cstr[end - self.c_node.length:end].decode('utf-8')
+            pass
         return self._surface
+
+    @surface.setter
+    def surface(self, ss):
+        self._surface = ss
     
     @property
     def feature(self):
@@ -199,6 +208,7 @@ cdef class GenericTagger:
 
     cdef mecab_t* c_tagger
     cdef object wrapper
+    cdef dict _cache
 
     def __init__(self, args='', wrapper=make_tuple, quiet=False):
         # The first argument is ignored because in the MeCab binary the argc
@@ -220,6 +230,7 @@ cdef class GenericTagger:
             raise RuntimeError("Failed initializing MeCab")
         free(argv)
         self.wrapper = wrapper
+        self._cache = {}
 
     def __call__(self, text):
         """Wrapper for parseToNodeList."""
@@ -238,8 +249,9 @@ cdef class GenericTagger:
         return Node.wrap(node, self.wrapper)
 
     def parseToNodeList(self, text):
-        cstr = bytes(text, 'utf-8')
-        cdef const mecab_node_t* node = mecab_sparse_tonode(self.c_tagger, cstr)
+        # cstr = bytes(text, 'utf-8')
+        bstr = bytes(text, 'utf-8')
+        cdef const mecab_node_t* node = mecab_sparse_tonode(self.c_tagger, bstr)
 
         # A nodelist always contains one each of BOS and EOS (beginning/end of
         # sentence) nodes. Since they have no information on them and MeCab
@@ -248,12 +260,28 @@ cdef class GenericTagger:
 
         # Node that on the command line this behavior is different, and each
         # line is treated as a sentence.
+
         out = []
         while node.next:
             node = node.next
             if node.stat == 3: # eos node
                 return out
-            out.append(self.wrap(node))
+            nn = self.wrap(node)
+
+            # TODO maybe add an option to this function that doesn't cache the
+            # surface. Not caching here is faster but means node surfaces are 
+            # invalidated on the next call of this function.
+
+            # avoid new string allocations
+            # TODO try lru cache instead of intern (reason: good to age stuff out)
+            surf = node.surface[:node.length]
+            shash = hash(surf)
+            if shash not in self._cache:
+                self._cache[shash] = sys.intern(surf.decode("utf-8"))
+            nn.surface = self._cache[shash]
+
+            out.append(nn)
+
 
     def nbest(self, text, num=10):
         cstr = bytes(text, 'utf-8')
