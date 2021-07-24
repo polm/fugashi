@@ -189,14 +189,14 @@ cdef str get_error_details(int argc, char** argv):
     model = mecab_model_new(argc, argv)
     return mecab_strerror(NULL).decode('utf-8')
 
-cdef void print_detailed_error(list args, int argc, char** argv):
-    """Print guide to solving initialization errors."""
-    print(FAILMESSAGE, file=sys.stderr)
-    print('arguments:', args, file=sys.stderr)
+cdef str get_detailed_error(list args, int argc, char** argv):
+    """Generate guide to solving initialization errors."""
+    msg = FAILMESSAGE + "\n"
+    msg += "arguments: " + str(args) + "\n"
+    msg += get_error_details(argc, argv) + "\n"
+    msg += '----------------------------------------------------------\n'
+    return msg
 
-    message = get_error_details(argc, argv)
-    print('error message:', message, file=sys.stderr)
-    print('----------------------------------------------------------')
 
 cdef class GenericTagger:
     """Generic Tagger, supports any dictionary.
@@ -224,10 +224,11 @@ cdef class GenericTagger:
             # In theory mecab_strerror should return an error string from MeCab
             # It doesn't seem to work and just returns b'' though, so this will
             # have to do.
+            msg = "Failed initializing MeCab"
             if not quiet:
-                print_detailed_error(args, argc, argv)
+                msg = get_detailed_error(args, argc, argv)
             free(argv)
-            raise RuntimeError("Failed initializing MeCab")
+            raise RuntimeError(msg)
         free(argv)
         self.wrapper = wrapper
         self._cache = {}
