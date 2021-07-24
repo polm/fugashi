@@ -272,6 +272,9 @@ cdef class GenericTagger:
             # surface. Not caching here is faster but means node surfaces are 
             # invalidated on the next call of this function.
 
+            # In theory the input string should be re-usable, but it's hard to
+            # track ownership of it in Python properly.
+
             # avoid new string allocations
             # TODO try lru cache instead of intern (reason: good to age stuff out)
             surf = node.surface[:node.length]
