@@ -268,17 +268,20 @@ cdef class GenericTagger:
                 return out
             nn = self.wrap(node)
 
+            # TODO maybe add an option to this function that doesn't cache the
+            # surface. Not caching here is faster but means node surfaces are 
+            # invalidated on the next call of this function.
+
             # avoid new string allocations
-            #TODO try lru cache instead of intern (reason: good to age stuff out)
+            # TODO try lru cache instead of intern (reason: good to age stuff out)
             surf = node.surface[:node.length]
             shash = hash(surf)
             if shash not in self._cache:
                 self._cache[shash] = sys.intern(surf.decode("utf-8"))
             nn.surface = self._cache[shash]
+
             out.append(nn)
 
-        #TODO maybe add an option to this function that just pings surface on 
-        # everything here for eager evaluation
 
     def nbest(self, text, num=10):
         cstr = bytes(text, 'utf-8')
