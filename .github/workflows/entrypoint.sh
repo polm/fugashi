@@ -24,12 +24,7 @@ make install
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 
 # Build the wheels
-if [ "$(uname -m)" == "aarch64" ]
-then
-    Python="cp36-cp36m cp37-cp37m cp38-cp38 cp39-cp39"
-else
-    Python="cp35-cp35m cp36-cp36m cp37-cp37m cp38-cp38 cp39-cp39"
-fi
+Python="cp36-cp36m cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310"
 for PYVER in $Python; do
   # install cython first
   /opt/python/$PYVER/bin/pip install cython setuptools-scm
