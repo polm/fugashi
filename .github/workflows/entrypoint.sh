@@ -39,7 +39,7 @@ for wheel in /github/workspace/wheels/*.whl; do
   then
     auditwheel repair "$wheel" --plat manylinux2014_aarch64 -w /github/workspace/manylinux-aarch64-wheels
   else
-    auditwheel repair "$wheel" --plat manylinux1_x86_64 -w /github/workspace/manylinux1-wheels
+    auditwheel repair "$wheel" --plat manylinux2014_x86_64 -w /github/workspace/manylinux2014-wheels
   fi
 done
 
@@ -48,5 +48,5 @@ if [ "$(uname -m)" == "aarch64" ]
 then
     ls /github/workspace/manylinux-aarch64-wheels
 else
-    ls /github/workspace/manylinux1-wheels
+    ls /github/workspace/manylinux2014-wheels
 fi
