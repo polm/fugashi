@@ -37,3 +37,31 @@ jobs:
         python setup.py sdist
         twine upload dist/fugashi*.tar.gz
 
+  build_linux-aarch64:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Set up QEMU
+      id: qemu
+      uses: docker/setup-qemu-action@v1
+    - uses: ./.github/workflows/actions/build-manylinux-aarch64/
+    - name: Upload Wheels
+      uses: actions/upload-artifact@v1
+      with:
+        name: manylinux-aarch64-wheels
+        path: manylinux-aarch64-wheels
+    - name: Publish to PyPI if tagged
+      if: startsWith(github.ref, 'refs/tags')
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        python --version
+        pip --version
+        python -m pip install --upgrade pip
+        pip install twine setuptools-scm
+        twine upload manylinux-aarch64-wheels/fugashi*whl
