@@ -45,7 +45,7 @@ jobs:
         unzip -o "mecab-msvc-x64.zip" -d c:/mecab
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade setuptools wheel pip setuptools-scm
+        python -m pip install --upgrade setuptools wheel pip setuptools-scm machomachomangler
         pip install -r requirements.txt
     - name: Build PyExt
       run: |
@@ -54,10 +54,18 @@ jobs:
       shell: bash
       run: |
         mkdir -p upload/
-        mv build/lib.*/fugashi/* upload/
-        # TODO: Add noise to dll name
-        export DLL_NOISE=$(sha256sum c:/mecab/libmecab.dll)
+        mv build/lib.*/fugashi/*.py upload/
+
+        # SHA256 added to avoid "Known DLL" table
+        DLL_NOISE=$(sha256sum c:/mecab/libmecab.dll)
         cp c:/mecab/libmecab.dll upload/libmecab.${DLL_NOISE}.dll
+
+        # Mangle PYD so it looks for the right DLL name
+        for pyd in build/lib.*/fugashi/*.py; do
+          python -m machomachomangler.cmd.redll \
+            "${pyd}" "upload/$(basename "${pyd}")" \
+            'libmecab.dll' "libmecab.${DLL_NOISE}.dll"
+        done
     - uses: actions/upload-artifact@v1
       with:
         name: bundle
@@ -117,9 +125,11 @@ jobs:
         mkdir -p upload/
         mv build/lib.*/fugashi/* upload/
         cp mecab-out/lib/libmecab.2.dylib upload/libmecab.dylib
-    - name: Change loader instruction to load bundled libmecab.dylib
-      run: |
+
+        # Modify load instructions so the PyExt knows to look in the right place
         install_name_tool -change "${GITHUB_WORKSPACE}/mecab-out/lib/libmecab.2.dylib" '@loader_path/libmecab.dylib' upload/fugashi.*.so
+
+        # TODO: Sign!!
     - uses: actions/upload-artifact@v1
       with:
         name: bundle
