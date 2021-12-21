@@ -97,7 +97,7 @@ jobs:
       run: |
         git clone --depth=1 https://github.com/taku910/mecab.git
         cd mecab/mecab
-        ./configure --enable-utf8-only --out=${GITHUB_WORKSPACE}/mecab-out
+        ./configure --enable-utf8-only --prefix=${GITHUB_WORKSPACE}/mecab-out
         make
         make install
     - name: Install dependencies
