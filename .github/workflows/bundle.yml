@@ -57,7 +57,7 @@ jobs:
         mv build/lib.*/fugashi/*.py upload/
 
         # SHA256 added to avoid "Known DLL" table
-        DLL_NOISE=$(sha256sum c:/mecab/libmecab.dll)
+        DLL_NOISE=($(sha256sum c:/mecab/libmecab.dll))
         cp c:/mecab/libmecab.dll upload/libmecab.${DLL_NOISE}.dll
 
         # Mangle PYD so it looks for the right DLL name
