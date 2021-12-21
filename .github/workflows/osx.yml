@@ -3,7 +3,7 @@ name: Build OSX wheels
 on:
   push:
     branches:
-      - master
+      - lambdadog/fugashi-bundled
   create:
 
 jobs:
@@ -71,12 +71,4 @@ jobs:
         ls -la dist
         VERSION=$(python setup.py --version)
         pip install dist/fugashi-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-macosx*.whl
-    - name: Publish to PyPI if tagged
-      if: startsWith(github.ref, 'refs/tags')
-      env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      run: |
-        pip install twine
-        twine upload dist/fugashi*
 
