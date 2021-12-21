@@ -8,7 +8,6 @@ on:
 
 jobs:
   build_windows:
-    if: ${{ false }}
     runs-on: windows-latest
     strategy:
       max-parallel: 4
@@ -51,8 +50,8 @@ jobs:
       with:
         name: bundle
         path: upload
+
   build_macos:
-    if: ${{ false }}
     runs-on: macos-latest
     strategy:
       max-parallel: 4
@@ -91,8 +90,6 @@ jobs:
 
         # Modify load instructions so the PyExt knows to look in the right place
         install_name_tool -change "${GITHUB_WORKSPACE}/mecab-out/lib/libmecab.2.dylib" '@loader_path/libmecab.dylib' upload/fugashi.*.so
-
-        # TODO: Sign!!
     - uses: actions/upload-artifact@v1
       with:
         name: bundle
@@ -126,7 +123,6 @@ jobs:
         path: upload
 
   build_linux-aarch64:
-    if: ${{ false }}
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
