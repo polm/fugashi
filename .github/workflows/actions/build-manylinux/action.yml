@@ -1,6 +1,11 @@
-name: build wheels with manylinux docker image
+name: ManyLinux build
+inputs:
+  arch:
+    required: true
+    default: 'x86_64'
 runs:
     using: 'docker'
-    image: docker://quay.io/pypa/manylinux2014_x86_64
+    image: docker://quay.io/pypa/manylinux2014_${{ inputs.arch }}
     args:
         - .github/workflows/entrypoint.sh
+        - ${{ inputs.python-tag }}

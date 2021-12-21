@@ -2,51 +2,35 @@
 # Install mecab, then build wheels
 set -e
 
-# prereqs
-#yum -y install curl-devel libcurl3 git
+cd /github/workspace
 
-# install MeCab
-# TODO specify the commit used here
+# Install mecab
 git clone --depth=1 git://github.com/taku910/mecab.git
 cd mecab/mecab
 if [ "$(uname -m)" == "aarch64" ]
 then
-    ./configure --enable-utf8-only --build=aarch64-unknown-linux-gnu
+    ./configure --enable-utf8-only --build=aarch64-unknown-linux-gnu --prefix=/github/workspace/mecab-out
 else
-    ./configure --enable-utf8-only
+    ./configure --enable-utf8-only --prefix=/github/workspace/mecab-out
 fi
 make
 make install
 
-# Hack
-# see here:
-# https://github.com/RalfG/python-wheels-manylinux-build/issues/26
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
+# Install dependencies
+/opt/python/$1/bin/pip install setuptools-scm
 
-# Build the wheels
-Python="cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310"
-for PYVER in $Python; do
-  # install cython first
-  /opt/python/$PYVER/bin/pip install cython setuptools-scm
+/opt/python/$1/bin/pip install -r requirements.txt
 
-  # build the wheels
-  /opt/python/$PYVER/bin/pip wheel /github/workspace -w /github/workspace/wheels || { echo "Failed while buiding $PYVER wheel"; exit 1; }
-done
+# Build PyExt
+export PATH=$PATH:/github/workspace/mecab-out/bin
 
-# fix the wheels (bundles libs)
-for wheel in /github/workspace/wheels/*.whl; do
-  if [ "$(uname -m)" == "aarch64" ]
-  then
-    auditwheel repair "$wheel" --plat manylinux2014_aarch64 -w /github/workspace/manylinux-aarch64-wheels
-  else
-    auditwheel repair "$wheel" --plat manylinux2014_x86_64 -w /github/workspace/manylinux2014-wheels
-  fi
-done
+/opt/python/$1/bin/setup.py build
 
-echo "Built wheels:"
-if [ "$(uname -m)" == "aarch64" ]
-then
-    ls /github/workspace/manylinux-aarch64-wheels
-else
-    ls /github/workspace/manylinux2014-wheels
-fi
+# Prepare for upload
+mkdir -p upload/
+mv build/lib.*/fugashi/* upload/
+cp mecab-out/lib/libmecab.so.2.0.0 upload/libmecab.so
+
+# Patchelf time!
+patchelf --set-rpath '$ORIGIN/' upload/fugashi.*.so
+patchelf --replace-needed libmecab.so.2 libmecab.so upload/fugashi.*.so
