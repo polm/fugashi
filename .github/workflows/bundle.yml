@@ -38,7 +38,7 @@ jobs:
         path: C:/mecab
         key: mecab-windows
     - name: Download mecab
-      #if: steps.cache-mecab.outputs.cache-hit != 'true'
+      if: steps.cache-mecab.outputs.cache-hit != 'true'
       shell: bash
       run: |
         curl -LO "https://github.com/chezou/mecab/releases/download/mecab-0.996-msvc-5/mecab-msvc-x64.zip"
@@ -102,6 +102,7 @@ jobs:
         path: mecab-out
         key: mecab-macos
     - name: Build mecab
+      if: steps.cache-mecab.outputs.cache-hit != 'true'
       shell: bash
       run: |
         git clone --depth=1 https://github.com/taku910/mecab.git
