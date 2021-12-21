@@ -53,11 +53,11 @@ jobs:
     - name: Prepare for upload
       shell: bash
       run: |
-        mkdir -p upload/lib
+        mkdir -p upload/
         mv build/lib.*/fugashi/* upload/
         # TODO: Add noise to dll name
         export DLL_NOISE=$(sha256sum c:/mecab/libmecab.dll)
-        cp c:/mecab/libmecab.dll upload/lib/libmecab.${DLL_NOISE}.dll
+        cp c:/mecab/libmecab.dll upload/libmecab.${DLL_NOISE}.dll
     - uses: actions/upload-artifact@v1
       with:
         name: bundle
@@ -114,12 +114,12 @@ jobs:
     - name: Prepare for upload
       shell: bash
       run: |
-        mkdir -p upload/lib
+        mkdir -p upload/
         mv build/lib.*/fugashi/* upload/
-        cp mecab-out/lib/libmecab.2.dylib upload/lib/libmecab.dylib
+        cp mecab-out/lib/libmecab.2.dylib upload/libmecab.dylib
     - name: Change loader instruction to load bundled libmecab.dylib
       run: |
-        install_name_tool -change "${GITHUB_WORKSPACE}/mecab-out/lib/libmecab.2.dylib" '@loader_path/lib/libmecab.dylib' upload/fugashi.*.so
+        install_name_tool -change "${GITHUB_WORKSPACE}/mecab-out/lib/libmecab.2.dylib" '@loader_path/libmecab.dylib' upload/fugashi.*.so
     - uses: actions/upload-artifact@v1
       with:
         name: bundle
