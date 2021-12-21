@@ -56,7 +56,8 @@ jobs:
         mkdir -p upload/lib
         mv build/lib.*/fugashi/* upload/
         # TODO: Add noise to dll name
-        cp c:/mecab/libmecab.dll upload/lib/libmecab.dll
+        export DLL_NOISE=$(sha256sum c:/mecab/libmecab.dll)
+        cp c:/mecab/libmecab.dll upload/lib/libmecab.${DLL_NOISE}.dll
     - uses: actions/upload-artifact@v1
       with:
         name: bundle
