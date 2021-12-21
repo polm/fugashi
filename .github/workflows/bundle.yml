@@ -86,6 +86,7 @@ jobs:
       run: |
         mkdir -p upload/
         mv build/lib.*/fugashi/* upload/
+        mv LICENSE* upload/
         cp mecab-out/lib/libmecab.2.dylib upload/libmecab.dylib
 
         # Modify load instructions so the PyExt knows to look in the right place
