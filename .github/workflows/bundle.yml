@@ -61,7 +61,7 @@ jobs:
         cp c:/mecab/libmecab.dll upload/libmecab.${DLL_NOISE}.dll
 
         # Mangle PYD so it looks for the right DLL name
-        for pyd in build/lib.*/fugashi/*.py; do
+        for pyd in build/lib.*/fugashi/*.pyd; do
           python -m machomachomangler.cmd.redll \
             "${pyd}" "upload/$(basename "${pyd}")" \
             'libmecab.dll' "libmecab.${DLL_NOISE}.dll"
