@@ -31,14 +31,7 @@ jobs:
     - uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Cache mecab
-      id: cache-mecab
-      uses: actions/cache@v1
-      with:
-        path: C:/mecab
-        key: mecab-windows
     - name: Download mecab
-      if: steps.cache-mecab.outputs.cache-hit != 'true'
       shell: bash
       run: |
         curl -LO "https://github.com/chezou/mecab/releases/download/mecab-0.996-msvc-5/mecab-msvc-x64.zip"
@@ -95,14 +88,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         architecture: x64
-    - name: Cache mecab
-      id: cache-mecab
-      uses: actions/cache@v1
-      with:
-        path: mecab-out
-        key: mecab-macos
     - name: Build mecab
-      if: steps.cache-mecab.outputs.cache-hit != 'true'
       shell: bash
       run: |
         git clone --depth=1 https://github.com/taku910/mecab.git
