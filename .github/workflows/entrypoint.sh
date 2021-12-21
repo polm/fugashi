@@ -29,8 +29,8 @@ export PATH=$PATH:/github/workspace/mecab-out/bin
 # Prepare for upload
 mkdir -p upload/
 mv build/lib.*/fugashi/* upload/
-cp mecab-out/lib/libmecab.so.2.0.0 upload/libmecab.so
+cp mecab-out/lib/libmecab.so.2.0.0 "upload/libmecab.$(uname -m).so"
 
 # Patchelf time!
 patchelf --set-rpath '$ORIGIN/' upload/fugashi.*.so
-patchelf --replace-needed libmecab.so.2 libmecab.so upload/fugashi.*.so
+patchelf --replace-needed libmecab.so.2 "libmecab.$(uname -m).so" upload/fugashi.*.so

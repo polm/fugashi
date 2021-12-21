@@ -1,6 +1,10 @@
-name: build linux aarch64 wheels with manylinux docker image
+name: ManyLinux build (x86_64)
+inputs:
+  python-tag:
+    required: true
 runs:
     using: 'docker'
     image: docker://quay.io/pypa/manylinux2014_aarch64
     args:
         - .github/workflows/entrypoint.sh
+        - ${{ inputs.python-tag }}

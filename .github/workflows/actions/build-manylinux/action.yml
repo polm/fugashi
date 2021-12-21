@@ -1,11 +1,10 @@
-name: ManyLinux build
+name: ManyLinux build (x86_64)
 inputs:
-  arch:
+  python-tag:
     required: true
-    default: 'x86_64'
 runs:
     using: 'docker'
-    image: docker://quay.io/pypa/manylinux2014_${{ inputs.arch }}
+    image: docker://quay.io/pypa/manylinux2014_x86_64
     args:
         - .github/workflows/entrypoint.sh
         - ${{ inputs.python-tag }}

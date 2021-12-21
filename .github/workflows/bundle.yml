@@ -96,13 +96,12 @@ jobs:
         name: bundle
         path: upload
 
-  build_linux:
+  build_linux-x86_64:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
         python-version: ['3.7', '3.8', '3.9', '3.10']
-        arch: ['x86_64', 'aarch64']
         include:
         - python-version: '3.7'
           py-short: 'cp37-cp37m'
@@ -117,7 +116,31 @@ jobs:
     - uses: docker/setup-qemu-action@v1
     - uses: ./.github/workflows/actions/build-manylinux/
       with:
-        arch: ${{ matrix.arch }}
+        python-tag: ${{ matrix.py-short }}
+    - uses: actions/upload-artifact@v1
+      with:
+        name: bundle
+        path: upload
+  build_linux-aarch64:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: ['3.7', '3.8', '3.9', '3.10']
+        include:
+        - python-version: '3.7'
+          py-short: 'cp37-cp37m'
+        - python-version: '3.8'
+          py-short: 'cp38-cp38'
+        - python-version: '3.9'
+          py-short: 'cp39-cp39'
+        - python-version: '3.10'
+          py-short: 'cp310-cp310'
+    steps:
+    - uses: actions/checkout@v1
+    - uses: docker/setup-qemu-action@v1
+    - uses: ./.github/workflows/actions/build-manylinux-aarch64/
+      with:
         python-tag: ${{ matrix.py-short }}
     - uses: actions/upload-artifact@v1
       with:
