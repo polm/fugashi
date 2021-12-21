@@ -16,6 +16,8 @@ fi
 make
 make install
 
+cd /github/workspace
+
 # Install dependencies
 /opt/python/$1/bin/pip install setuptools-scm
 
@@ -24,7 +26,7 @@ make install
 # Build PyExt
 export PATH=$PATH:/github/workspace/mecab-out/bin
 
-/opt/python/$1/bin/setup.py build
+/opt/python/$1/bin/python setup.py build
 
 # Prepare for upload
 mkdir -p upload/
