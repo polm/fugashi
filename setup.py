@@ -25,8 +25,7 @@ extensions = Extension('fugashi.fugashi',
         extra_objects=extra_objects,
         extra_link_args=extra_link_args)
 
-setup(name='fugashi', 
-      use_scm_version=True,
+setup(name='fugashi',
       author="Paul O'Leary McCann",
       author_email="polm@dampfkraft.com",
       description="A Cython MeCab wrapper for fast, pythonic Japanese tokenization.",
@@ -51,4 +50,4 @@ setup(name='fugashi',
           'unidic': ['unidic'],
           'unidic-lite': ['unidic-lite'],
       },
-      setup_requires=['wheel', 'Cython', 'setuptools_scm'])
+      setup_requires=['wheel', 'Cython'])

@@ -19,8 +19,6 @@ make install
 cd /github/workspace
 
 # Install dependencies
-/opt/python/$1/bin/pip install setuptools-scm
-
 /opt/python/$1/bin/pip install -r requirements.txt
 
 # Build PyExt
