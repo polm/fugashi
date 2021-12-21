@@ -8,6 +8,7 @@ on:
 
 jobs:
   build_windows:
+    if: ${{ false }}
     runs-on: windows-latest
     strategy:
       max-parallel: 4
@@ -51,6 +52,7 @@ jobs:
         name: bundle
         path: upload
   build_macos:
+    if: ${{ false }}
     runs-on: macos-latest
     strategy:
       max-parallel: 4
@@ -114,14 +116,17 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - uses: docker/setup-qemu-action@v1
-    - uses: ./.github/workflows/actions/build-manylinux/
+    - name: Run manylinux build
+      uses: ./.github/workflows/actions/build-manylinux/
       with:
         python-tag: ${{ matrix.py-short }}
     - uses: actions/upload-artifact@v1
       with:
         name: bundle
         path: upload
+
   build_linux-aarch64:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
@@ -139,7 +144,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - uses: docker/setup-qemu-action@v1
-    - uses: ./.github/workflows/actions/build-manylinux-aarch64/
+    - name: Run manylinux build
+      uses: ./.github/workflows/actions/build-manylinux-aarch64/
       with:
         python-tag: ${{ matrix.py-short }}
     - uses: actions/upload-artifact@v1
