@@ -38,7 +38,7 @@ jobs:
         path: C:/mecab
         key: mecab-windows
     - name: Download mecab
-      if: steps.cache-mecab.outputs.cache-hit != 'true'
+      #if: steps.cache-mecab.outputs.cache-hit != 'true'
       shell: bash
       run: |
         curl -LO "https://github.com/chezou/mecab/releases/download/mecab-0.996-msvc-5/mecab-msvc-x64.zip"
@@ -53,10 +53,10 @@ jobs:
     - name: Prepare for upload
       shell: bash
       run: |
-        mkdir -p upload/mecab
-        mv build/lib.*/fugashi/fugashi.*.pyd upload/
+        mkdir -p upload/lib
+        mv build/lib.*/fugashi/* upload/
         # TODO: Add noise to dll name
-        mv c:/mecab/libmecab.dll upload/mecab
+        cp c:/mecab/libmecab.dll upload/lib/libmecab.dll
     - uses: actions/upload-artifact@v1
       with:
         name: bundle
@@ -113,9 +113,12 @@ jobs:
     - name: Prepare for upload
       shell: bash
       run: |
-        mkdir -p upload/mecab
-        mv build/lib.*/fugashi/fugashi.*.so upload/
-        mv mecab-out/lib/libmecab.2.dylib upload/mecab/libmecab.dylib
+        mkdir -p upload/lib
+        mv build/lib.*/fugashi/* upload/
+        cp mecab-out/lib/libmecab.2.dylib upload/lib/libmecab.dylib
+    - name: Change loader instruction to load bundled libmecab.dylib
+      run: |
+        install_name_tool -change "${GITHUB_WORKSPACE}/mecab-out/lib/libmecab.2.dylib" '@loader_path/lib/libmecab.dylib' upload/fugashi.*.so
     - uses: actions/upload-artifact@v1
       with:
         name: bundle
