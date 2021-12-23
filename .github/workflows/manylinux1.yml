@@ -2,11 +2,8 @@ name: Build manylinux1 wheels
 
 on:
   push:
-    branches: 
-      - master
     tags:
       - '*'
-  create:
 
 jobs:
   build_linux:
