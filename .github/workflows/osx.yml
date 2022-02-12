@@ -1,5 +1,8 @@
 name: Build OSX wheels
 
+env:
+  CIBW_ARCHS_MACOS: "x86_64 arm64"
+
 on:
   push:
     branches:
@@ -9,26 +12,6 @@ on:
 jobs:
   build_osx:
     runs-on: macos-latest
-    strategy:
-      max-parallel: 5
-      matrix:
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
-        include:
-          - python-version: '3.6'
-            py-short: '36'
-            py-short2: '36m'
-          - python-version: '3.7'
-            py-short: '37'
-            py-short2: '37m'
-          - python-version: '3.8'
-            py-short: '38'
-            py-short2: '38'
-          - python-version: '3.9'
-            py-short: '39'
-            py-short2: '39'
-          - python-version: '3.10'
-            py-short: '310'
-            py-short2: '310'
     steps:
     - uses: actions/checkout@v1
     - name: Set up python
