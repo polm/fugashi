@@ -12,9 +12,6 @@ jobs:
     - uses: actions/checkout@v1
     - name: Set up python
       uses: actions/setup-python@v2
-        #with:
-        #python-version: ${{ matrix.python-version }}
-        #architecture: x64
     - name: Download and build MeCab
       shell: bash
       run: |
@@ -28,34 +25,14 @@ jobs:
         python -m pip install --upgrade setuptools wheel pip setuptools-scm
         python -m pip install cibuildwheel==2.3.1
         pip install -r requirements.txt
-        #python setup.py bdist_wheel
         
         python -m cibuildwheel --output-dir dist
 
-        # Fix the wheel #18
-        #pip install delocate
-        #VERSION=$(python setup.py --version)
-        #path_to_wheel=$(find -f dist/fugashi-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-macosx*.whl)
-        ## Unzip the wheel and copy the dylib
-        #mkdir tmp; cd tmp
-        #unzip ../$path_to_wheel
-        #delocate-path -L fugashi.dylibs .
-        # Zip the wheel
-        #zip -r -D ../$path_to_wheel *
-        #cd -; rm -rf tmp
-        # Check if libmecab.2.dylib is included
-        #unzip -t $path_to_wheel
     - name: Upload Wheels
       uses: actions/upload-artifact@v1
       with: 
         name: osx-wheels
         path: dist
-    - name: Check wheels
-      shell: bash
-      run: |
-        ls -la dist
-        VERSION=$(python setup.py --version)
-        pip install dist/fugashi-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-macosx*.whl
     - name: Publish to PyPI if tagged
       if: startsWith(github.ref, 'refs/tags')
       env:
