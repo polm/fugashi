@@ -3,7 +3,7 @@ name: Build OSX wheels
 env:
   CIBW_ARCHS_MACOS: "x86_64 arm64"
 
-on: [push, create]
+on: [push]
 
 jobs:
   build_osx:
