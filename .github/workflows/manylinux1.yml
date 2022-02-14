@@ -12,14 +12,10 @@ jobs:
       with:
         python-version: '3.x'
     - uses: ./.github/workflows/actions/build-manylinux/
-    - name: Build MeCab
+    - name: Install MeCab locally
       run: |
-        git clone --depth=1 git://github.com/taku910/mecab.git
         cd mecab/mecab
-        ./configure --enable-utf8-only
-        make
         make install
-
     - name: Upload Wheels
       uses: actions/upload-artifact@v1
       with: 
