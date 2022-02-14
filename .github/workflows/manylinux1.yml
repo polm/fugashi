@@ -1,9 +1,6 @@
 name: Build manylinux1 wheels
 
-on:
-  push:
-    tags:
-      - '*'
+on: [push]
 
 jobs:
   build_linux:
