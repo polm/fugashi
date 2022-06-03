@@ -35,3 +35,6 @@ cdef extern from "mecab.h":
     cdef const char* mecab_strerror(mecab_t *mecab)
 
     cdef int mecab_dict_index(int argc, char**argv)
+
+    cdef int mecab_nbest_init(mecab_t* mecab, const char* str)
+    cdef const mecab_node_t* mecab_nbest_next_tonode(mecab_t* mecab)
