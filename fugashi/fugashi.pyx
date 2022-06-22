@@ -287,8 +287,12 @@ cdef class GenericTagger:
 
             out.append(nn)
 
-
     def nbest(self, text, num=10):
+        cstr = bytes(text, 'utf-8')
+        out = mecab_nbest_sparse_tostr(self.c_tagger, num, cstr).decode('utf-8')
+        return out.rstrip()
+
+    def nbest_nodes(self, text, num=10):
         cstr = bytes(text, 'utf-8')
         assert mecab_nbest_init(self.c_tagger, cstr), (
             "Error at mecab_nbest_init"
