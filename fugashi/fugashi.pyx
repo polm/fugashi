@@ -300,9 +300,9 @@ cdef class GenericTagger:
             out = []
             while node.next:
                 node = node.next
-                nn = self.wrap(node)
                 if node.stat == 3:
                     break
+                nn = self.wrap(node)
                 surf = node.surface[:node.length]
                 shash = hash(surf)
 
