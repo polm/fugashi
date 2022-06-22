@@ -301,6 +301,9 @@ cdef class GenericTagger:
         ret = []
         for path in range(num):
             node = mecab_nbest_next_tonode(self.c_tagger)
+            if not node:
+                # this happens if there aren't enough paths
+                break
             out = []
             while node.next:
                 node = node.next
