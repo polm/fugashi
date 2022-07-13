@@ -3,11 +3,16 @@ import setuptools
 import subprocess
 from setuptools import setup
 from distutils.extension import Extension
+import sys
 
 from fugashi_util import check_libmecab
 
 # get the build parameters
-output, data_files = check_libmecab()
+if sys.argv[1] == "sdist":
+    # hack for automated builds
+    output, data_files = [], []
+else:
+    output, data_files = check_libmecab()
 
 # pad the list in case something's missing
 mecab_config = list(output) + ([''] * 5)
