@@ -115,8 +115,8 @@ If you use fugashi in research, it would be appreciated if you cite this paper. 
 If you have a problem with fugashi feel free to open an issue. However, there
 are some cases where it might be better to use a different library.
 
-- If you don't want to deal with installing MeCab at all, try [SudachiPy](https://github.com/WorksApplications/SudachiPy).
-- If you need to work with Korean, try [KoNLPy](https://konlpy.org/en/latest/).
+- If you don't want to deal with installing MeCab at all, try [SudachiPy](https://github.com/WorksApplications/sudachi.rs).
+- If you need to work with Korean, try [pymecab-ko](https://github.com/NoUnique/pymecab-ko) or [KoNLPy](https://konlpy.org/en/latest/).
 
 ## License and Copyright Notice
 
