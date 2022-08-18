@@ -2,12 +2,9 @@
 # Install mecab, then build wheels
 set -e
 
-# prereqs
-#yum -y install curl-devel libcurl3 git
-
 # install MeCab
 # TODO specify the commit used here
-git clone --depth=1 git@github.com:taku910/mecab.git
+git clone --depth=1 https://github.com/taku910/mecab.git
 cd mecab/mecab
 if [ "$(uname -m)" == "aarch64" ]
 then
@@ -24,7 +21,7 @@ make install
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 
 # Build the wheels
-Python="cp36-cp36m cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310"
+Python="cp37-cp37m cp38-cp38 cp39-cp39 cp310-cp310"
 for PYVER in $Python; do
   # install cython first
   /opt/python/$PYVER/bin/pip install cython setuptools-scm
