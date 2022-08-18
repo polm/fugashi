@@ -288,11 +288,19 @@ cdef class GenericTagger:
             out.append(nn)
 
     def nbest(self, text, num=10):
+        """Return the n-best possible tokenizations of the input, giving the
+        output as a single string.
+        """
+
         cstr = bytes(text, 'utf-8')
         out = mecab_nbest_sparse_tostr(self.c_tagger, num, cstr).decode('utf-8')
         return out.rstrip()
 
-    def parse_nbest(self, text, num=10):
+    def nbestToNodeList(self, text, num=10):
+        """Return the n-best possible tokenizations of the input, giving each
+        as a list of nodes.
+        """
+
         cstr = bytes(text, 'utf-8')
         assert mecab_nbest_init(self.c_tagger, cstr), (
             "Error at mecab_nbest_init"
