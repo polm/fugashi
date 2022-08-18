@@ -2,7 +2,8 @@
 from fugashi.mecab cimport (mecab_new, mecab_sparse_tostr2, mecab_t, mecab_node_t,
         mecab_sparse_tonode, mecab_nbest_sparse_tostr, 
         mecab_dictionary_info_t, mecab_dictionary_info,
-        mecab_model_new, mecab_strerror, mecab_dict_index)
+        mecab_model_new, mecab_strerror, mecab_dict_index,
+        mecab_nbest_init, mecab_nbest_next_tonode)
 from collections import namedtuple
 import os
 import csv
@@ -286,11 +287,48 @@ cdef class GenericTagger:
 
             out.append(nn)
 
-
     def nbest(self, text, num=10):
+        """Return the n-best possible tokenizations of the input, giving the
+        output as a single string.
+        """
+
         cstr = bytes(text, 'utf-8')
         out = mecab_nbest_sparse_tostr(self.c_tagger, num, cstr).decode('utf-8')
         return out.rstrip()
+
+    def nbestToNodeList(self, text, num=10):
+        """Return the n-best possible tokenizations of the input, giving each
+        as a list of nodes.
+        """
+
+        cstr = bytes(text, 'utf-8')
+        assert mecab_nbest_init(self.c_tagger, cstr), (
+            "Error at mecab_nbest_init"
+        )
+
+        ret = []
+        for path in range(num):
+            node = mecab_nbest_next_tonode(self.c_tagger)
+            if not node:
+                # this happens if there aren't enough paths
+                break
+            out = []
+            while node.next:
+                node = node.next
+                if node.stat == 3:
+                    break
+                nn = self.wrap(node)
+                surf = node.surface[:node.length]
+                shash = hash(surf)
+
+                if shash not in self._cache:
+                    self._cache[shash] = sys.intern(surf.decode("utf-8"))
+                nn.surface = self._cache[shash]
+                out.append(nn)
+            
+            ret.append(out)
+        
+        return ret
 
     @property
     def dictionary_info(self):
