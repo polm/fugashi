@@ -17,6 +17,7 @@ TOKENIZER_TESTS = (
 NBEST_TESTS = (
         ('外国人参政権', '外国 人参 政権 \n外国 人 参政 権'),
         ("深海魚は、深海に生息する魚類の総称。", '深海 魚 は 、 深海 に 生息 する 魚類 の 総称 。 \n深 海魚 は 、 深海 に 生息 する 魚類 の 総称 。'),
+        ("東京都の大人気ない主材料", '東京 都 の 大 人気 ない 主材 料 \n東京 都 の 大 人気 ない 主 材料')
         )
 
 POS_TESTS = (
@@ -44,6 +45,15 @@ def test_tokens(text, saved):
 def test_nbest(text, saved):
     tagger = Tagger('-Owakati')
     assert tagger.nbest(text, 2) == saved
+
+@pytest.mark.parametrize('text,saved', NBEST_TESTS)
+def test_nbest_nodes(text, saved):
+    tagger = Tagger()
+    # parse adds a space to the end of each line
+    saved = [ss.strip() for ss in saved.split("\n")]
+    res = tagger.nbestToNodeList(text, 2)
+    out = [" ".join([nn.surface for nn in nodes]) for nodes in res]
+    assert out == saved
 
 def test_invalid_args():
     # Invalid args will give a NULL pointer for the Tagger object
