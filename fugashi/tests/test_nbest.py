@@ -1,11 +1,13 @@
-## NOTE: These tests are written against unidic-3.1.0+2021-08-31, fed with https://data.statmt.org/cc-100/ja.txt.xz corpus
-
 from fugashi import Tagger 
 import string
+import pytest
 
+# NOTE: The bulk test is written against unidic-3.1.0+2021-08-31, fed with
+# corpus cc-100, accessible at:
+# https://data.statmt.org/cc-100/ja.txt.xz
 path_to_jatxt = "ja.txt"
 
-
+@pytest.mark.skip(reason="This test requires too much data to run in CI.")
 def test_bulk():
     tagger = Tagger()
     
@@ -36,7 +38,7 @@ def test_bulk():
             if not line:
                 continue
             
-            paths = tagger.parse_nbest(line, 10)
+            paths = tagger.nbestToNodeList(line, 10)
             if len(paths) != 10:
                 insufficient_paths.append(str(i))
             
@@ -49,6 +51,6 @@ def test_bulk():
                 print_result(i)
                 
     print_result('Final')
-        
+
 if __name__ == '__main__':
     test_bulk()
