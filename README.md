@@ -44,8 +44,8 @@ for word in tagger(text):
 fugashi requires a dictionary. [UniDic](https://unidic.ninjal.ac.jp/) is
 recommended, and two easy-to-install versions are provided.
 
-  - [unidic-lite](https://github.com/polm/unidic-lite), a 2013 version of Unidic that's relatively small
-  - [unidic](https://github.com/polm/unidic-py), the latest UniDic 2.3.0, which is 1GB on disk and requires a separate download step
+  - [unidic-lite](https://github.com/polm/unidic-lite), a slightly modified version 2.1.2 of Unidic (from 2013) that's relatively small
+  - [unidic](https://github.com/polm/unidic-py), the latest UniDic 3.1.0, which is 770MB on disk and requires a separate download step
 
 If you just want to make sure things work you can start with `unidic-lite`, but
 for more serious processing `unidic` is recommended. For production use you'll
