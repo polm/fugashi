@@ -23,7 +23,10 @@ guide][guide] for a basic introduction to Japanese tokenization.
 
 If you are on an unsupported platform (like PowerPC), you'll need to install
 MeCab first. It's recommended you install [from
-source](https://github.com/taku910/mecab).
+source](https://github.com/taku910/mecab). If you need to build from source on
+Windows, [@chezou's fork](https://github.com/chezou/mecab) is recommended; see
+[issue #44](https://github.com/polm/fugashi/issues/44#issuecomment-954426115)
+for an explanation of the problems with the official repo.
 
 ## Usage
 
