@@ -10,7 +10,7 @@
 
 fugashi is a Cython wrapper for [MeCab](https://taku910.github.io/mecab/), a
 Japanese tokenizer and morphological analysis tool.  Wheels are provided for
-Linux, OSX, and Win64, and UniDic is [easy to install](#installing-a-dictionary).
+Linux, OSX (Intel), and Win64, and UniDic is [easy to install](#installing-a-dictionary).
 
 **issueを英語で書く必要はありません。**
 
@@ -21,12 +21,19 @@ guide][guide] for a basic introduction to Japanese tokenization.
 [guide]: https://www.dampfkraft.com/nlp/how-to-tokenize-japanese.html
 [interactive demo]: https://share.streamlit.io/polm/fugashi-streamlit-demo/main/demo.py
 
-If you are on an unsupported platform (like PowerPC), you'll need to install
-MeCab first. It's recommended you install [from
+If you are on a platform for which wheels are not provided, you'll need to
+install MeCab first. It's recommended you install [from
 source](https://github.com/taku910/mecab). If you need to build from source on
 Windows, [@chezou's fork](https://github.com/chezou/mecab) is recommended; see
 [issue #44](https://github.com/polm/fugashi/issues/44#issuecomment-954426115)
 for an explanation of the problems with the official repo.
+
+Known platforms without wheels:
+
+- Mac M1: need a CI build solution for this #55
+- musl-based distros like alpine #77
+- PowerPC
+- Windows 32bit
 
 ## Usage
 
