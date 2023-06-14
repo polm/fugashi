@@ -30,8 +30,8 @@ for an explanation of the problems with the official repo.
 
 Known platforms without wheels:
 
-- Mac M1: need a CI build solution for this #55
-- musl-based distros like alpine #77
+- Mac M1: need a CI build solution for this [#55](https://github.com/polm/fugashi/issues/55)
+- musl-based distros like alpine [#77](https://github.com/polm/fugashi/issues/77)
 - PowerPC
 - Windows 32bit
 
