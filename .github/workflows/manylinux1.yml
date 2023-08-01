@@ -22,8 +22,8 @@ jobs:
     - name: build sdist
       run: |
         python -m pip install --upgrade pip
-        pip install twine setuptools-scm
-        python setup.py sdist
+        pip install twine setuptools-scm build
+        python -m build
     - name: upload to pypi if tagged
       if: startsWith(github.ref, 'refs/tags')
       env:
