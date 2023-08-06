@@ -10,14 +10,14 @@ cd mecab/mecab
 
 rm -rf src/.libs-arm64 src/.libs-x86_64 src/.libs.combined
 
-./configure $FLAGS CXX="clang++ -target $ARM_TRIPLET" CC="clang -target $ARM_TRIPLET" CFLAGS="-target $ARM_TRIPLET" CXXFLAGS="-target $ARM_TRIPLET" CPPFLAGS="-target $ARM_TRIPLET" LDFLAGS="-target $ARM_TRIPLET"
+./configure $FLAGS CXX="clang++ -target $ARM_TRIPLET" CC="clang" CXXFLAGS="-target $ARM_TRIPLET" CPPFLAGS="-target $ARM_TRIPLET" LDFLAGS="-target $ARM_TRIPLET"
 
 make clean
 make -j$(nproc)
 
 mv src/.libs src/.libs-arm64
 
-./configure $FLAGS CXX="clang++ -target $X86_TRIPLET" CC="clang -target $X86_TRIPLET" CFLAGS="-target $X86_TRIPLET" CXXFLAGS="-target $X86_TRIPLET" CPPFLAGS="-target $X86_TRIPLET" LDFLAGS="-target $X86_TRIPLET"
+./configure $FLAGS CXX="clang++ -target $X86_TRIPLET" CC="clang" CXXFLAGS="-target $X86_TRIPLET" CPPFLAGS="-target $X86_TRIPLET" LDFLAGS="-target $X86_TRIPLET"
 
 make clean
 make -j$(nproc)
