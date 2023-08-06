@@ -10,17 +10,18 @@ cd mecab/mecab
 
 rm -rf src/.libs-arm64 src/.libs-x86_64 src/.libs.combined
 
-./configure $FLAGS CXX="clang++ -target $ARM_TRIPLET" CC="clang" CXXFLAGS="-target $ARM_TRIPLET" CPPFLAGS="-target $ARM_TRIPLET" LDFLAGS="-target $ARM_TRIPLET"
+./configure $FLAGS --host="arm-apple-darwin22.1.0 " CXX="clang++ -target $ARM_TRIPLET" CC="clang"
 
 make clean
-make -j$(nproc)
+# nproc doesnt exist on the runner
+make -j$(sysctl -n hw.logicalcpu_max)
 
 mv src/.libs src/.libs-arm64
 
-./configure $FLAGS CXX="clang++ -target $X86_TRIPLET" CC="clang" CXXFLAGS="-target $X86_TRIPLET" CPPFLAGS="-target $X86_TRIPLET" LDFLAGS="-target $X86_TRIPLET"
+./configure $FLAGS --host="x86_64-apple-darwin22.1.0 " CXX="clang++ -target $X86_TRIPLET" CC="clang"
 
 make clean
-make -j$(nproc)
+make -j$(sysctl -n hw.logicalcpu_max)
 
 mv src/.libs src/.libs-x86_64
 
