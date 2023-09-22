@@ -14,9 +14,16 @@ cdef extern from "mecab.h":
         unsigned int id
         unsigned short length
         unsigned short rlength
+        unsigned short rcAttr
+        unsigned short lcAttr
         unsigned short posid
         unsigned char char_type
         unsigned char stat
+        unsigned char isbest
+        float alpha
+        float beta
+        short wcost
+        long cost
     
     cdef struct mecab_model_t:
         pass

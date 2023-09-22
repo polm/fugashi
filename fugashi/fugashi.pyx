@@ -82,12 +82,24 @@ cdef class Node:
         return self.c_node.feature.decode('utf-8')
     
     @property
+    def id(self):
+        return self.c_node.id
+
+    @property
     def length(self):
         return self.c_node.length
 
     @property
     def rlength(self):
         return self.c_node.rlength
+
+    @property
+    def rc_attr(self):
+        return self.c_node.rcAttr
+
+    @property
+    def lc_attr(self):
+        return self.c_node.lcAttr
 
     @property
     def posid(self):
@@ -100,6 +112,26 @@ cdef class Node:
     @property
     def stat(self):
         return self.c_node.stat
+
+    @property
+    def isbest(self):
+        return self.c_node.isbest
+
+    @property
+    def alpha(self):
+        return self.c_node.alpha
+
+    @property
+    def beta(self):
+        return self.c_node.beta
+
+    @property
+    def wcost(self):
+        return self.c_node.wcost
+
+    @property
+    def cost(self):
+        return self.c_node.cost
 
     @property
     def is_unk(self):
