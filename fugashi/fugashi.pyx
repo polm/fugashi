@@ -296,10 +296,7 @@ cdef class GenericTagger:
         # line is treated as a sentence.
 
         out = []
-        while node.next:
-            node = node.next
-            if node.stat == 3: # eos node
-                return out
+        while node:
             nn = self.wrap(node)
 
             # TODO maybe add an option to this function that doesn't cache the
@@ -318,6 +315,13 @@ cdef class GenericTagger:
             nn.surface = self._cache[shash]
 
             out.append(nn)
+            node = node.next
+      
+        # set surface for BOS and EOS
+        out[0].surface = "BOS"
+        out[-1].surface = "EOS"
+
+        return out
 
     def nbest(self, text, num=10):
         """Return the n-best possible tokenizations of the input, giving the
@@ -345,10 +349,7 @@ cdef class GenericTagger:
                 # this happens if there aren't enough paths
                 break
             out = []
-            while node.next:
-                node = node.next
-                if node.stat == 3:
-                    break
+            while node:
                 nn = self.wrap(node)
                 surf = node.surface[:node.length]
                 shash = hash(surf)
@@ -357,7 +358,12 @@ cdef class GenericTagger:
                     self._cache[shash] = sys.intern(surf.decode("utf-8"))
                 nn.surface = self._cache[shash]
                 out.append(nn)
-            
+                node = node.next
+                
+            # set surface for BOS and EOS
+            out[0].surface = "BOS"
+            out[-1].surface = "EOS"
+
             ret.append(out)
         
         return ret
@@ -414,7 +420,7 @@ cdef class Tagger(GenericTagger):
 
         super().__init__(arg)
 
-        fields = self.parseToNodeList("日本")[0].feature_raw.split(',')
+        fields = self.parseToNodeList("日本")[1].feature_raw.split(',')
 
         if len(fields) == 17:
             self.wrapper = UnidicFeatures17
