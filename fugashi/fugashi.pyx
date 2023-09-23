@@ -428,7 +428,7 @@ cdef class Tagger(GenericTagger):
 
         super().__init__(arg)
 
-        fields = self.parseToNodeList("日本")[1].feature_raw.split(',')
+        fields = self.parseToNodeList("日本")[0].feature_raw.split(',')
 
         if len(fields) == 17:
             self.wrapper = UnidicFeatures17
