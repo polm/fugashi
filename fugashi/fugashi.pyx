@@ -282,7 +282,7 @@ cdef class GenericTagger:
         # This function just exists so subclasses can override the node type.
         return Node.wrap(node, self.wrapper)
 
-    def parseToNodeList(self, text):
+    def parseToNodeList(self, text, strip=True):
         # cstr = bytes(text, 'utf-8')
         bstr = bytes(text, 'utf-8')
         cdef const mecab_node_t* node = mecab_sparse_tonode(self.c_tagger, bstr)
@@ -316,10 +316,14 @@ cdef class GenericTagger:
 
             out.append(nn)
             node = node.next
-      
-        # set surface for BOS and EOS
-        out[0].surface = "BOS"
-        out[-1].surface = "EOS"
+
+        if strip:
+            # remove BOS and EOS nodes
+            out = out[1:-1]
+        else:
+            # set surface for BOS and EOS
+            out[0].surface = "BOS"
+            out[-1].surface = "EOS"
 
         return out
 
@@ -332,7 +336,7 @@ cdef class GenericTagger:
         out = mecab_nbest_sparse_tostr(self.c_tagger, num, cstr).decode('utf-8')
         return out.rstrip()
 
-    def nbestToNodeList(self, text, num=10):
+    def nbestToNodeList(self, text, num=10, strip=True):
         """Return the n-best possible tokenizations of the input, giving each
         as a list of nodes.
         """
@@ -359,10 +363,14 @@ cdef class GenericTagger:
                 nn.surface = self._cache[shash]
                 out.append(nn)
                 node = node.next
-                
-            # set surface for BOS and EOS
-            out[0].surface = "BOS"
-            out[-1].surface = "EOS"
+            
+            if strip:
+                # remove BOS and EOS nodes
+                out = out[1:-1]
+            else:
+                # set surface for BOS and EOS
+                out[0].surface = "BOS"
+                out[-1].surface = "EOS"
 
             ret.append(out)
         
