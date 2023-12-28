@@ -65,10 +65,10 @@ To get either of these dictionaries, you can install them directly using `pip`
 or do the below:
 
 ```sh
-pip install fugashi[unidic-lite]
+pip install 'fugashi[unidic-lite]'
 
 # The full version of UniDic requires a separate download step
-pip install fugashi[unidic]
+pip install 'fugashi[unidic]'
 python -m unidic download
 ```
 
