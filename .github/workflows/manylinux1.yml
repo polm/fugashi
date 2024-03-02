@@ -6,11 +6,11 @@ jobs:
   build_sdist:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
+        python-version: '>=3.7 <3.13'
     - name: install MeCab
       run: |
         git clone --depth=1 https://github.com/taku910/mecab.git
@@ -35,11 +35,11 @@ jobs:
   build_linux:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
+        python-version: '>=3.7 <3.13'
     - name: build array of wheels
       uses: ./.github/workflows/actions/build-manylinux/
     - name: Upload Wheels
@@ -62,11 +62,11 @@ jobs:
   build_linux-aarch64:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
+        python-version: '>=3.7 <3.13'
     - name: Set up QEMU
       id: qemu
       uses: docker/setup-qemu-action@v1
