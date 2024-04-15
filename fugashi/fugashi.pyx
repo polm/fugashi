@@ -115,14 +115,17 @@ cdef class Node:
 
     @property
     def isbest(self):
+        # only relevant in nbest mode
         return self.c_node.isbest
 
     @property
     def alpha(self):
+        # only available if the tagger is started with the -m flag, else 0
         return self.c_node.alpha
 
     @property
     def beta(self):
+        # only available if the tagger is started with the -m flag, else 0
         return self.c_node.beta
 
     @property
@@ -290,7 +293,7 @@ cdef class GenericTagger:
         # A nodelist always contains one each of BOS and EOS (beginning/end of
         # sentence) nodes. Since they have no information on them and MeCab
         # doesn't do any kind of sentence tokenization they're not useful in
-        # the output and will be removed here.
+        # the output and will be removed here by default (strip=True)
 
         # Node that on the command line this behavior is different, and each
         # line is treated as a sentence.
