@@ -82,12 +82,24 @@ cdef class Node:
         return self.c_node.feature.decode('utf-8')
     
     @property
+    def id(self):
+        return self.c_node.id
+
+    @property
     def length(self):
         return self.c_node.length
 
     @property
     def rlength(self):
         return self.c_node.rlength
+
+    @property
+    def rc_attr(self):
+        return self.c_node.rcAttr
+
+    @property
+    def lc_attr(self):
+        return self.c_node.lcAttr
 
     @property
     def posid(self):
@@ -100,6 +112,29 @@ cdef class Node:
     @property
     def stat(self):
         return self.c_node.stat
+
+    @property
+    def isbest(self):
+        # only relevant in nbest mode
+        return self.c_node.isbest
+
+    @property
+    def alpha(self):
+        # only available if the tagger is started with the -m flag, else 0
+        return self.c_node.alpha
+
+    @property
+    def beta(self):
+        # only available if the tagger is started with the -m flag, else 0
+        return self.c_node.beta
+
+    @property
+    def wcost(self):
+        return self.c_node.wcost
+
+    @property
+    def cost(self):
+        return self.c_node.cost
 
     @property
     def is_unk(self):
@@ -250,7 +285,7 @@ cdef class GenericTagger:
         # This function just exists so subclasses can override the node type.
         return Node.wrap(node, self.wrapper)
 
-    def parseToNodeList(self, text):
+    def parseToNodeList(self, text, strip=True):
         # cstr = bytes(text, 'utf-8')
         bstr = bytes(text, 'utf-8')
         cdef const mecab_node_t* node = mecab_sparse_tonode(self.c_tagger, bstr)
@@ -258,16 +293,13 @@ cdef class GenericTagger:
         # A nodelist always contains one each of BOS and EOS (beginning/end of
         # sentence) nodes. Since they have no information on them and MeCab
         # doesn't do any kind of sentence tokenization they're not useful in
-        # the output and will be removed here.
+        # the output and will be removed here by default (strip=True)
 
         # Node that on the command line this behavior is different, and each
         # line is treated as a sentence.
 
         out = []
-        while node.next:
-            node = node.next
-            if node.stat == 3: # eos node
-                return out
+        while node:
             nn = self.wrap(node)
 
             # TODO maybe add an option to this function that doesn't cache the
@@ -286,6 +318,17 @@ cdef class GenericTagger:
             nn.surface = self._cache[shash]
 
             out.append(nn)
+            node = node.next
+
+        if strip:
+            # remove BOS and EOS nodes
+            out = out[1:-1]
+        else:
+            # set surface for BOS and EOS
+            out[0].surface = "BOS"
+            out[-1].surface = "EOS"
+
+        return out
 
     def nbest(self, text, num=10):
         """Return the n-best possible tokenizations of the input, giving the
@@ -296,7 +339,7 @@ cdef class GenericTagger:
         out = mecab_nbest_sparse_tostr(self.c_tagger, num, cstr).decode('utf-8')
         return out.rstrip()
 
-    def nbestToNodeList(self, text, num=10):
+    def nbestToNodeList(self, text, num=10, strip=True):
         """Return the n-best possible tokenizations of the input, giving each
         as a list of nodes.
         """
@@ -313,10 +356,7 @@ cdef class GenericTagger:
                 # this happens if there aren't enough paths
                 break
             out = []
-            while node.next:
-                node = node.next
-                if node.stat == 3:
-                    break
+            while node:
                 nn = self.wrap(node)
                 surf = node.surface[:node.length]
                 shash = hash(surf)
@@ -325,7 +365,16 @@ cdef class GenericTagger:
                     self._cache[shash] = sys.intern(surf.decode("utf-8"))
                 nn.surface = self._cache[shash]
                 out.append(nn)
+                node = node.next
             
+            if strip:
+                # remove BOS and EOS nodes
+                out = out[1:-1]
+            else:
+                # set surface for BOS and EOS
+                out[0].surface = "BOS"
+                out[-1].surface = "EOS"
+
             ret.append(out)
         
         return ret
