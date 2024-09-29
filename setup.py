@@ -43,7 +43,7 @@ setup(name='fugashi',
           "License :: OSI Approved :: MIT License",
           "Natural Language :: Japanese",
           ],
-      python_requires='>=3.7',
+      python_requires='>=3.8',
       ext_modules=[extensions],
       data_files=data_files,
       entry_points={
