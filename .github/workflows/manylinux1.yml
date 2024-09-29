@@ -43,7 +43,7 @@ jobs:
     - name: build array of wheels
       uses: ./.github/workflows/actions/build-manylinux/
     - name: Upload Wheels
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with: 
         name: manylinux2014-wheels
         path: manylinux2014-wheels
@@ -72,7 +72,7 @@ jobs:
       uses: docker/setup-qemu-action@v1
     - uses: ./.github/workflows/actions/build-manylinux-aarch64/
     - name: Upload Wheels
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v4
       with:
         name: manylinux-aarch64-wheels
         path: manylinux-aarch64-wheels
