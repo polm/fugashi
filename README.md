@@ -1,4 +1,4 @@
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/polm/fugashi-streamlit-demo/main/demo.py)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fugashi.streamlit.app)
 [![Current PyPI packages](https://badge.fury.io/py/fugashi.svg)](https://pypi.org/project/fugashi/)
 ![Test Status](https://github.com/polm/fugashi/workflows/test-manylinux/badge.svg)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/fugashi)](https://pypi.org/project/fugashi/)
@@ -19,7 +19,7 @@ on why fugashi exists and some of the design decisions, or see [this
 guide][guide] for a basic introduction to Japanese tokenization.
 
 [guide]: https://www.dampfkraft.com/nlp/how-to-tokenize-japanese.html
-[interactive demo]: https://share.streamlit.io/polm/fugashi-streamlit-demo/main/demo.py
+[interactive demo]: https://fugashi.streamlit.app
 
 If you are on a platform for which wheels are not provided, you'll need to
 install MeCab first. It's recommended you install [from
