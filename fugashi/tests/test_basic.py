@@ -28,6 +28,11 @@ ACCENT_TESTS = (
         ('稻村に行きました', ['0,2', '*', '0', '*', '*']),
         )
 
+WHITE_SPACE_TESTS = (
+        ("これは 半角スペースです", " "),
+        ("これは	タブ文字です", "	"),
+        )
+
 @pytest.mark.parametrize('text,wakati', WAKATI_TESTS)
 def test_wakati(text, wakati):
     tagger = Tagger('-Owakati')
@@ -86,3 +91,10 @@ def test_clobber():
     nodes2 = tagger("x y z !")
 
     assert "a b c d".split() == [nn.surface for nn in nodes1]
+
+@pytest.mark.parametrize("text,space", WHITE_SPACE_TESTS)
+def test_white_space(text, space):
+    tagger = Tagger()
+    nodes = tagger.parseToNodeList(text)
+
+    assert nodes[2].white_space == space
