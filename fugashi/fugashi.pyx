@@ -113,7 +113,7 @@ cdef class Node:
         else:
             len = (self.rlength - self.length)
 
-            offset = self.c_node.prev.rlength
+            offset = self.c_node.prev.length
             end = offset + len
 
             return self.c_node.prev.surface[offset:end].decode("utf-8")
