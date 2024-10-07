@@ -111,7 +111,12 @@ cdef class Node:
         if self.length == self.rlength:
             return ''
         else:
-            return ' ' * (self.rlength - self.length)
+            len = (self.rlength - self.length)
+
+            offset = self.c_node.prev.rlength
+            end = offset + len
+
+            return self.c_node.prev.surface[offset:end].decode("utf-8")
         
     cdef list pad_none(self, list fields):
         try:
