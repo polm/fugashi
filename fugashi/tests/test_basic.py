@@ -30,7 +30,9 @@ ACCENT_TESTS = (
 
 WHITE_SPACE_TESTS = (
         ("これは 半角スペースです", " "),
-        ("これは	タブ文字です", "	"),
+        ("これは\tタブ文字です", "\t"),
+        ("これは\n改行文字です", "\n"),
+        ("これは\n\t 複数種類の空白文字です", "\n\t "),
         )
 
 @pytest.mark.parametrize('text,wakati', WAKATI_TESTS)
