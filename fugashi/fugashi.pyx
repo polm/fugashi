@@ -61,10 +61,6 @@ cdef class Node:
     @property
     def surface(self):
         if self._surface is None:
-            #self._surface = self.c_node.surface[:self.c_node.length].decode('utf-8')
-            #base = self._offset + (self.c_node.rlength - self.c_node.length)
-            #end = self._offset + self.c_node.rlength
-            #self._surface = self.__cstr[end - self.c_node.length:end].decode('utf-8')
             pass
         return self._surface
 
