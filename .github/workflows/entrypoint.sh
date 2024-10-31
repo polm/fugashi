@@ -21,7 +21,7 @@ make install
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
 
 # Build the wheels
-Python="cp38-cp38 cp39-cp39 cp310-cp310 cp311-cp311 cp312-cp312"
+Python="cp38-cp38 cp39-cp39 cp310-cp310 cp311-cp311 cp312-cp312 cp313-cp313"
 for PYVER in $Python; do
   # install cython first
   /opt/python/$PYVER/bin/pip install cython setuptools-scm
