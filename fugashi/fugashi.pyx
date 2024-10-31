@@ -40,6 +40,7 @@ cdef class Node:
     feature string, which is an untokenized CSV string."""
     cdef const mecab_node_t* c_node
     cdef str _surface
+    cdef str _ws
     cdef object features
     cdef object wrapper
 
@@ -107,16 +108,13 @@ cdef class Node:
 
     @property
     def white_space(self):
-        # The half-width spaces before the token, if any.
-        if self.length == self.rlength:
+        if self._ws is None:
             return ''
-        else:
-            len = (self.rlength - self.length)
+        return self._ws
 
-            offset = self.c_node.prev.length
-            end = offset + len
-
-            return self.c_node.prev.surface[offset:end].decode("utf-8")
+    @white_space.setter
+    def white_space(self, ws):
+        self._ws = ws
         
     cdef list pad_none(self, list fields):
         try:
@@ -289,6 +287,15 @@ cdef class GenericTagger:
             if shash not in self._cache:
                 self._cache[shash] = sys.intern(surf.decode("utf-8"))
             nn.surface = self._cache[shash]
+
+            # do the same for whitespace
+            nodelen = node.rlength - node.length
+            pnode = node.prev
+            ws = pnode.surface[pnode.length : pnode.length + nodelen]
+            wshash = hash(ws)
+            if wshash not in self._cache:
+                self._cache[wshash] = sys.intern(ws.decode("utf-8"))
+            nn.white_space = self._cache[wshash]
 
             out.append(nn)
 

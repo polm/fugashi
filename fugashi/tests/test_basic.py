@@ -28,11 +28,14 @@ ACCENT_TESTS = (
         ('稻村に行きました', ['0,2', '*', '0', '*', '*']),
         )
 
+# Last number is token index of white space
 WHITE_SPACE_TESTS = (
-        ("これは 半角スペースです", " "),
-        ("これは\tタブ文字です", "\t"),
-        ("これは\n改行文字です", "\n"),
-        ("これは\n\t 複数種類の空白文字です", "\n\t "),
+        ("これは 半角スペースです", " ", 2),
+        ("これは\tタブ文字です", "\t", 2),
+        ("これは\n改行文字です", "\n", 2),
+        ("これは\n\t 複数種類の空白文字です", "\n\t ", 2),
+        ("これは\n\t 複数種類の空白文字です", "\n\t ", 2),
+        ("\tタブ文字で始まる文字列", "\t", 0),
         )
 
 @pytest.mark.parametrize('text,wakati', WAKATI_TESTS)
@@ -94,9 +97,9 @@ def test_clobber():
 
     assert "a b c d".split() == [nn.surface for nn in nodes1]
 
-@pytest.mark.parametrize("text,space", WHITE_SPACE_TESTS)
-def test_white_space(text, space):
+@pytest.mark.parametrize("text,space,idx", WHITE_SPACE_TESTS)
+def test_white_space(text, space, idx):
     tagger = Tagger()
     nodes = tagger.parseToNodeList(text)
 
-    assert nodes[2].white_space == space
+    assert nodes[idx].white_space == space
