@@ -86,3 +86,29 @@ def test_clobber():
     nodes2 = tagger("x y z !")
 
     assert "a b c d".split() == [nn.surface for nn in nodes1]
+
+@pytest.mark.parametrize('text,wakati', WAKATI_TESTS)
+def test_adding_bos_eos_nodes(text, wakati):
+    tagger = Tagger()
+    nodes1 = tagger.parseToNodeList(text, strip=True)
+    nodes2 = tagger.parseToNodeList(text, strip=False)
+
+    assert len(nodes1) + 2 == len(nodes2)
+    assert nodes2[0].surface == "BOS"
+    assert nodes2[-1].surface == "EOS"
+
+def test_extended_attributes():
+    tagger = Tagger("-m")
+
+    nodes = tagger("ふがしは美味しい")
+    # we could test specific values of these, but for now this just tests that
+    # they are set and don't blow up
+    for node in nodes:
+        assert node.id is not None
+        assert node.rc_attr is not None
+        assert node.lc_attr is not None
+        assert node.wcost > 0
+        assert node.cost > 0
+        # these are not zero because we use the -m flag to turn on marginal probs
+        assert node.alpha != 0
+        assert node.beta != 0
