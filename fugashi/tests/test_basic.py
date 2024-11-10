@@ -92,10 +92,11 @@ def test_accent(text, accent):
 def test_clobber():
     # Check that memory isn't clobbered by repeated parse calls
     tagger = Tagger()
-    nodes1 = tagger("a b c d")
+    nodes1 = tagger("a\tb c d")
     nodes2 = tagger("x y z !")
 
     assert "a b c d".split() == [nn.surface for nn in nodes1]
+    assert ["", "\t", " ", " "] == [nn.white_space for nn in nodes1]
 
 @pytest.mark.parametrize("text,space,idx", WHITE_SPACE_TESTS)
 def test_white_space(text, space, idx):
