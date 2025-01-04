@@ -6,7 +6,7 @@
 
 # fugashi
 
-<img src="https://github.com/polm/fugashi/raw/master/fugashi.png" width=125 height=125 alt="fugashi by Irasutoya" />
+<img src="https://github.com/polm/fugashi/raw/main/fugashi.png" width=125 height=125 alt="fugashi by Irasutoya" />
 
 fugashi is a Cython wrapper for [MeCab](https://taku910.github.io/mecab/), a
 Japanese tokenizer and morphological analysis tool.  Wheels are provided for
