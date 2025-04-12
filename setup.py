@@ -1,18 +1,14 @@
 import pathlib
-import setuptools
-import subprocess
-from setuptools import setup
-from distutils.extension import Extension
 import sys
+
+import setuptools
+from setuptools import Extension, setup
+from setuptools.command.build_ext import build_ext as _build_ext
 
 from fugashi_util import check_libmecab
 
 # get the build parameters
-if sys.argv[1] == "sdist":
-    # hack for automated builds
-    output, data_files = [], []
-else:
-    output, data_files = check_libmecab()
+output, dll_files = check_libmecab()
 
 # pad the list in case something's missing
 mecab_config = list(output) + ([''] * 5)
@@ -21,6 +17,16 @@ library_dirs = mecab_config[1].split()
 libraries = mecab_config[2].split()
 extra_objects = mecab_config[3].split()
 extra_link_args = mecab_config[4].split()
+
+
+class build_ext(_build_ext):
+    def run(self):
+        if self.editable_mode and sys.platform == "win32":
+            fugashi_dir = pathlib.Path(__file__).parent / "fugashi"
+            for i in dll_files:
+                self.copy_file(i, fugashi_dir)
+        return super().run()
+
 
 extensions = Extension('fugashi.fugashi', 
         ['fugashi/fugashi.pyx'], 
@@ -45,7 +51,7 @@ setup(name='fugashi',
           ],
       python_requires='>=3.8',
       ext_modules=[extensions],
-      data_files=data_files,
+      cmdclass={"build_ext": build_ext},
       entry_points={
           'console_scripts': [
               'fugashi = fugashi.cli:main',
