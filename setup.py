@@ -21,8 +21,11 @@ extra_link_args = mecab_config[4].split()
 
 class build_ext(_build_ext):
     def run(self):
-        if self.editable_mode and sys.platform == 'win32':
-            fugashi_dir = pathlib.Path(__file__).parent / 'fugashi'
+        if sys.platform == 'win32':
+            if self.editable_mode:
+                fugashi_dir = pathlib.Path(__file__).parent / 'fugashi'
+            else:
+                fugashi_dir = pathlib.Path(self.build_lib) / "fugashi"
             for i in dll_files:
                 self.copy_file(i, fugashi_dir)
         return super().run()
@@ -52,6 +55,7 @@ setup(name='fugashi',
       python_requires='>=3.8',
       ext_modules=[extensions],
       cmdclass={'build_ext': build_ext},
+      package_data={'fugashi': [pathlib.Path(i).name for i in dll_files]},
       entry_points={
           'console_scripts': [
               'fugashi = fugashi.cli:main',
