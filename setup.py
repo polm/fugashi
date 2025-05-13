@@ -25,7 +25,7 @@ class build_ext(_build_ext):
             if self.editable_mode:
                 fugashi_dir = pathlib.Path(__file__).parent / 'fugashi'
             else:
-                fugashi_dir = pathlib.Path(self.build_lib) / "fugashi"
+                fugashi_dir = pathlib.Path(self.build_lib) / 'fugashi'
             for i in dll_files:
                 self.copy_file(i, fugashi_dir)
         return super().run()
