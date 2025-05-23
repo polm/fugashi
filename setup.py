@@ -1,3 +1,4 @@
+import os
 import pathlib
 import sys
 
@@ -19,9 +20,15 @@ extra_objects = mecab_config[3].split()
 extra_link_args = mecab_config[4].split()
 
 
+bundle_dll = sys.platform == 'win32' and os.environ.get(
+    'FUGASHI_NO_BUNDLE_DLL', ''
+) not in ['', '0']
+fugashi_package_files = [pathlib.Path(i).name for i in dll_files] if bundle_dll else []
+
+
 class build_ext(_build_ext):
     def run(self):
-        if sys.platform == 'win32':
+        if bundle_dll:
             if self.editable_mode:
                 fugashi_dir = pathlib.Path(__file__).parent / 'fugashi'
             else:
@@ -55,7 +62,7 @@ setup(name='fugashi',
       python_requires='>=3.8',
       ext_modules=[extensions],
       cmdclass={'build_ext': build_ext},
-      package_data={'fugashi': [pathlib.Path(i).name for i in dll_files]},
+      package_data={'fugashi': fugashi_package_files},
       entry_points={
           'console_scripts': [
               'fugashi = fugashi.cli:main',

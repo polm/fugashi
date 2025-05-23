@@ -58,15 +58,11 @@ jobs:
     - name: Build wheel
       run: |
         python -m build --wheel
+      env:
+        FUGASHI_NO_BUNDLE_DLL: 1
     - name: Repair wheel
-      shell: bash
       run: |
-        VERSION=$(python setup.py --version)
-        python -m wheel unpack --dest dist/temp dist/fugashi-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-win_amd64.whl
-        unlink dist/temp/fugashi-${VERSION}/fugashi/libmecab.dll
-        python -m wheel pack --dest-dir ./dist ./dist/temp/fugashi-${VERSION}
-        rm --recursive ./dist/temp
-        python -m delvewheel repair --add-path="C:/mecab" ./dist/fugashi-*.whl
+        python -m delvewheel repair --add-path=C:/mecab ./dist/fugashi-*.whl
     - name: Upload Wheel
       uses: actions/upload-artifact@v4
       with:
