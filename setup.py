@@ -20,11 +20,15 @@ extra_objects = mecab_config[3].split()
 extra_link_args = mecab_config[4].split()
 
 
-bundle_dll = sys.platform == 'win32' and os.environ.get(
-    'FUGASHI_NO_BUNDLE_DLL', ''
-) not in ['', '0']
-fugashi_package_files = [pathlib.Path(i).name for i in dll_files] if bundle_dll else []
-
+# Windows DLL related prep.
+# By default the DLL will be bundled on windows, but you can turn it off with
+# an env var.
+bundle_dll = False
+fugashi_package_files = []
+no_bundle_env_var = os.environ.get("FUGASHI_NO_BUNDLE_DLL", "")
+if sys.platform == 'win32' and no_bundle_env_var not in ['', '0']:
+    bundle_dll = True
+    fugashi_package_files = [pathlib.Path(i).name for i in dll_files]
 
 class build_ext(_build_ext):
     def run(self):
