@@ -31,6 +31,10 @@ if sys.platform == 'win32' and no_bundle_env_var not in ['', '0']:
     fugashi_package_files = [pathlib.Path(i).name for i in dll_files]
 
 class build_ext(_build_ext):
+    """Custom behavior for build_ext.
+
+    This is only run when bundling DLLs on Windows, which requires copying
+    files around."""
     def run(self):
         if bundle_dll:
             if self.editable_mode:
