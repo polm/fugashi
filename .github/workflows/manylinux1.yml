@@ -22,7 +22,7 @@ jobs:
     - name: build sdist
       run: |
         python -m pip install --upgrade pip
-        pip install twine setuptools-scm build
+        pip install twine build
         python -m build
     - name: upload to pypi if tagged
       if: startsWith(github.ref, 'refs/tags')
@@ -56,7 +56,7 @@ jobs:
         python --version
         pip --version
         python -m pip install --upgrade pip
-        pip install twine setuptools-scm
+        pip install twine
         twine upload manylinux2014-wheels/fugashi*whl
 
   build_linux-aarch64:
@@ -85,5 +85,5 @@ jobs:
         python --version
         pip --version
         python -m pip install --upgrade pip
-        pip install twine setuptools-scm
+        pip install twine
         twine upload manylinux-aarch64-wheels/fugashi*whl
