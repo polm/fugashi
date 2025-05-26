@@ -82,5 +82,5 @@ jobs:
       shell: bash
       run: |
         pip install twine
-        twine upload dist/fugashi*
+        twine upload wheelhouse/fugashi*
 
