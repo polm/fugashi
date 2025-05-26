@@ -25,8 +25,8 @@ extra_link_args = mecab_config[4].split()
 # an env var.
 bundle_dll = False
 fugashi_package_files = []
-no_bundle_env_var = os.environ.get("FUGASHI_NO_BUNDLE_DLL", "")
-if sys.platform == "win32" and no_bundle_env_var not in ["", "0"]:
+should_bundle = os.environ.get("FUGASHI_NO_BUNDLE_DLL", "") in ("", "0")
+if sys.platform == "win32" and should_bundle:
     bundle_dll = True
     fugashi_package_files = [pathlib.Path(i).name for i in dll_files]
 
