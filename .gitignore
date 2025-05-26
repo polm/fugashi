@@ -125,3 +125,4 @@ dmypy.json
 .pyre/
 
 /fugashi/fugashi.c
+/fugashi/libmecab.dll
