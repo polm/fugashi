@@ -5,6 +5,8 @@ import sys
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext as _build_ext
 
+# This is a side effect of how build works, see:
+# https://github.com/pypa/setuptools/discussions/3134
 sys.path.append(str(pathlib.Path(__file__).parent))
 from fugashi_util import check_libmecab
 
