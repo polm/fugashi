@@ -7,7 +7,8 @@ name = "fugashi"
 description = "Cython MeCab wrapper for fast, pythonic Japanese tokenization."
 readme = "README.md"
 requires-python = ">=3.9"
-license.text = "MIT AND BSD-3-Clause"
+license = "MIT AND BSD-3-Clause"
+license-files = ["LICENSE", "LICENSE.mecab"]
 authors = [{ name = "Paul O'Leary McCann", email = "polm@dampfkraft.com" }]
 classifiers = [
   "Environment :: Console",
@@ -36,7 +37,6 @@ source = "https://github.com/polm/fugashi"
 funding = "https://github.com/sponsors/polm"
 
 [tool.setuptools]
-license-files = ["LICENSE", "LICENSE.mecab"]
 include-package-data = false
 
 [tool.setuptools.packages.find]
