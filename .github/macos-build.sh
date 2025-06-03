@@ -49,6 +49,6 @@ sudo make install
 cd ../..
 
 python -m pip install --upgrade pip
-python -m pip install cibuildwheel==2.21.3
+python -m pip install cibuildwheel==2.23.3
 
 python -m cibuildwheel --platform macos --archs x86_64,arm64,universal2 --output-dir dist
