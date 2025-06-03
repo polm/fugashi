@@ -1,19 +1,18 @@
 [build-system]
-requires = ["Cython~=3.0.11", "setuptools>=64", "setuptools-scm>=8"]
+requires = ["Cython~=3.0.11", "setuptools>=77", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "fugashi"
 description = "Cython MeCab wrapper for fast, pythonic Japanese tokenization."
 readme = "README.md"
-requires-python = ">=3.8"
-license.text = "MIT"
+requires-python = ">=3.9"
+license.text = "MIT AND BSD-3-Clause"
 authors = [{ name = "Paul O'Leary McCann", email = "polm@dampfkraft.com" }]
 classifiers = [
   "Environment :: Console",
   "Intended Audience :: Developers",
   "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: MIT License",
   "Natural Language :: Japanese",
   "Operating System :: POSIX :: Linux",
   "Operating System :: MacOS :: MacOS X",
