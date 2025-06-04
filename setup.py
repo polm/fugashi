@@ -2,10 +2,12 @@ import os
 import pathlib
 import sys
 
-import setuptools
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext as _build_ext
 
+# This is a side effect of how build works, see:
+# https://github.com/pypa/setuptools/discussions/3134
+sys.path.append(str(pathlib.Path(__file__).parent))
 from fugashi_util import check_libmecab
 
 # get the build parameters
@@ -59,33 +61,7 @@ extensions = Extension(
 )
 
 setup(
-    name="fugashi",
-    use_scm_version=True,
-    author="Paul O'Leary McCann",
-    author_email="polm@dampfkraft.com",
-    description="A Cython MeCab wrapper for fast, pythonic Japanese tokenization.",
-    long_description=pathlib.Path("README.md").read_text("utf8"),
-    long_description_content_type="text/markdown",
-    url="https://github.com/polm/fugashi",
-    packages=setuptools.find_packages(),
-    classifiers=[
-        "License :: OSI Approved :: MIT License",
-        "Natural Language :: Japanese",
-    ],
-    python_requires=">=3.8",
     ext_modules=[extensions],
     cmdclass={"build_ext": build_ext},
     package_data={"fugashi": fugashi_package_files},
-    entry_points={
-        "console_scripts": [
-            "fugashi = fugashi.cli:main",
-            "fugashi-info = fugashi.cli:info",
-            "fugashi-build-dict = fugashi.cli:build_dict",
-        ]
-    },
-    extras_require={
-        "unidic": ["unidic"],
-        "unidic-lite": ["unidic-lite"],
-    },
-    setup_requires=["wheel", "Cython~=3.0.11", "setuptools_scm"],
 )

@@ -13,11 +13,8 @@ jobs:
     strategy:
       max-parallel: 5
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
         include:
-          - python-version: '3.8'
-            py-short: '38'
-            py-short2: '38'
           - python-version: '3.9'
             py-short: '39'
             py-short2: '39'
@@ -53,8 +50,8 @@ jobs:
         unzip -o "mecab-msvc-x64.zip" -d c:/mecab
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade setuptools wheel pip setuptools-scm build delvewheel
-        pip install -r requirements.txt
+        python -m pip install --upgrade pip setuptools
+        pip install build delvewheel setuptools-scm
     - name: Build wheel
       run: |
         python -m build --wheel
@@ -72,7 +69,7 @@ jobs:
       shell: bash
       run: |
         ls -la
-        VERSION=$(python setup.py --version)
+        VERSION=$(python -m setuptools_scm)
         pip install "wheelhouse/fugashi-${VERSION}-cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}-win_amd64.whl"
     - name: Publish to PyPI if tagged
       if: startsWith(github.ref, 'refs/tags')
