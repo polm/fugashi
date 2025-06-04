@@ -40,6 +40,7 @@ funding = "https://github.com/sponsors/polm"
 include-package-data = false
 
 [tool.setuptools.packages.find]
+include = ["fugashi*"]
 exclude = ["fugashi.tests*"]
 
 [tool.setuptools_scm]
