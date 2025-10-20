@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
         include:
           - python-version: '3.9'
             py-short: '39'
@@ -25,6 +25,9 @@ jobs:
           - python-version: '3.13'
             py-short: 313
             py-short2: 313
+          - python-version: '3.14'
+            py-short: 314
+            py-short2: 314
     env:
       PYTHON: /opt/python/cp${{ matrix.py-short }}-cp${{ matrix.py-short2 }}/bin/python
     steps:
